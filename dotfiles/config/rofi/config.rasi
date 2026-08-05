@@ -1,0 +1,12 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";
+    terminal: "ghostty";
+    font: "JetBrainsMono Nerd Font 12";
+    drun-display-format: "{name}";
+    disable-history: false;
+    sidebar-mode: false;
+}
+
+@theme "~/.config/rofi/themes/mytheme.rasi"

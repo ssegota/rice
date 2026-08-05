@@ -1,0 +1,76 @@
+# ── Credentials: never in this bundle ───────────────────────────────────────
+# This bundle is the kind of directory that ends up in a public dotfiles repo.
+# A pushed secret stays in the git history, in every clone, and in every fork.
+# See secrets/README.md.
+
+# AWS
+.aws/
+**/.aws/
+credentials
+**/credentials
+*.pem
+*.ppk
+
+# GitHub CLI — hosts.yml holds the OAuth token; config.yml is safe
+**/gh/hosts.yml
+hosts.yml
+
+# SSH / GPG
+.ssh/
+**/.ssh/
+id_rsa*
+id_ed25519*
+id_ecdsa*
+*_rsa
+*_ed25519
+.gnupg/
+**/.gnupg/
+*.gpg
+*.asc
+*.kbx
+
+# Encrypted secret bundles — these belong outside the repo entirely
+rice-secrets-*
+*.tar.gz.gpg
+
+# Token-bearing config
+.wakatime.cfg
+**/.wakatime.cfg
+.netrc
+.npmrc
+.pypirc
+.docker/config.json
+**/hosts.yml
+*token*
+*secret*
+# …but keep this repo's own secret-handling tooling and docs, whose filenames
+# match the pattern above. Without these, `git add` silently drops them.
+!secrets/
+!secrets/*.sh
+!secrets/README.md
+!scripts/check-secrets.sh
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# ── Local state that shouldn't travel ───────────────────────────────────────
+*.log
+*.bkp
+*.swp
+*~
+.rice-backup-*/
+.DS_Store
+
+# Shell/app history
+.bash_history
+.python_history
+.viminfo
+**/History/
+
+# ── Large binaries: keep them out of git, keep them in the USB copy ─────────
+# The bundle ships ~56 MB of wallpapers. Fine on a USB stick, bad in git.
+# If you publish this to GitHub, uncomment the next line and re-download or
+# sync wallpapers separately.
+# wallpapers/

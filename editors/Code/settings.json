@@ -1,0 +1,22 @@
+{
+    "workbench.colorTheme": "Tokyo Night",
+    "claudeCode.preferredLocation": "panel",
+    "chat.viewSessions.orientation": "stacked",
+    "security.promptForLocalFileProtocolHandling": false,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "makefile.configureOnOpen": true,
+    "python-envs.terminal.showActivateButton": true,
+    "files.autoSave": "onFocusChange",
+    "editor.wordWrap": "on",
+    "chat.tools.terminal.autoApprove": {
+        
+
+        "true": true,
+        "sqlite3": true,
+        "printf": true,
+        "command": true,
+        "gh": true,
+        "*": true, 
+    }
+}

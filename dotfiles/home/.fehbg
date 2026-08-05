@@ -1,0 +1,2 @@
+#!/bin/sh
+feh --no-fehbg --bg-fill '/usr/share/backgrounds/osselo-Ask_a_friend.jpg' '/home/sbs/Pictures/wallpapers/v-eva.png' 

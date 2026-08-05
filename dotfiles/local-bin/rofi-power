@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Define icons (Requires a Nerd Font)
+lock="  Lock"
+logout="  Logout"
+suspend="  Suspend"
+reboot="  Reboot"
+shutdown="  Shutdown"
+
+# Variable passed to rofi
+options="$lock\n$logout\n$suspend\n$reboot\n$shutdown"
+
+chosen="$(echo -e "$options" | rofi -dmenu -i -p "Power Menu" -nb "#282c34" -nf "#abb2bf" -sb "#61afef" -sf "#282c34")"
+
+case $chosen in
+    $lock)
+        # Same locker as $mod+Escape and xss-lock in ~/.config/i3/config
+        i3lock-fancy -gp
+        ;;
+    $logout)
+        i3-msg exit || swaymsg exit
+        ;;
+    $suspend)
+        systemctl suspend
+        ;;
+    $reboot)
+        systemctl reboot
+        ;;
+    $shutdown)
+        systemctl poweroff
+        ;;
+esac

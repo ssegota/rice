@@ -1,0 +1,116 @@
+# Third-party apt sources present on the source machine (2026-08-05)
+# scripts/apt-sources.sh recreates the ones that can be scripted.
+
+### /etc/apt/sources.list.d/antigravity.sources
+Types: deb
+URIs: https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/
+Suites: antigravity-debian
+Components: main
+Signed-By: /etc/apt/keyrings/antigravity-repo-key.gpg
+Enabled: no
+
+### /etc/apt/sources.list.d/google-chrome.sources
+X-Repolib-Name: Google Chrome
+Types: deb
+URIs: https://dl.google.com/linux/chrome-stable/deb/
+Suites: stable
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/google-chrome.gpg
+
+### /etc/apt/sources.list.d/nodesource.sources
+Types: deb
+URIs: https://deb.nodesource.com/node_22.x
+Suites: nodistro
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/nodesource.gpg
+
+### /etc/apt/sources.list.d/obsproject-ubuntu-obs-studio-questing.sources
+Types: deb
+URIs: https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu/
+Suites: questing
+Components: main
+Signed-By: -----BEGIN PGP PUBLIC KEY BLOCK-----
+ .
+ mQINBFRDMp8BEADAvCww2zAiC7riFzyF6r654ANmRz4DG2unfd63thzotexQ5xq2
+ lf6jHByDwfMlSUokGjKk7iM8ohM0XBnKOwBi7lLmjTNUW9oQ7y44yQ2q99XR6Qyn
+ b8pLzIXrQOHONdtccPfiGxOhgpm2+suVDoDmKgZSnnTd+Ktu5S/H603Kd6BzJcOr
+ l3sXHVWC4NBch7/IWnZ8nx+P7JvdaHG02qBrIpB0y/n0/WNOvs9yTMmDxiYGiJnf
+ KbJUJ78sws3KmmUo1ELoykZ9JlEpM+2z+UjwwTiHFS/A5PEC6ApiEPm3CWvba+IM
+ TW2Nyn2VNs9GWb9xAjNZxPGzp9PUQ8+p7xRV+gUEp0NC8hUB34d+A4dtdvRt7le+
+ s0UfmnVfkGXWSAA229hjtmyL9/R13rlBPcbSjI7gyRVw6b/Or12oVpW/mm9OZK8B
+ 9nRZYkYoYN4tpDNxAJRej+75wL+bQs0npZci2i2vgNIuDiDHPNnWwgIVZjfPphzo
+ gdy2zW8MGZX15nNjQU2KNi9njrnzwvYSCtxVMzzahQFZRPO5bc3ROLt1a6t/SzSA
+ DFfFbv+yn+lq2Lk7zPsxmjWOdBEOkq66Ar/BRyhpA2plXeHj6fh6DUK16GGEeOjp
+ kgsNyOq2Zx8yyQOvuotQq4uBNdA2XmuJerDIbnyilbHcbQqSsP6Ox41U2wARAQAB
+ tBxMYXVuY2hwYWQgUFBBIGZvciBvYnNwcm9qZWN0iQI4BBMBAgAiBQJUQzKfAhsD
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDvxxEn9CXiKG/dD/0Xht0S98DL
+ Wqjbx56QR4WRMsxmI9CWdMD7ivIn3WtC/B9vkI3lcZ7pbOcxD8/oNKPbgBB8anyA
+ P1gVPBFWDGYdBmCWidBWVg++hntDLZzXih2B6HqI7Cg2RHblDcKKUXCS7K79ZhhH
+ aH+CnCt4JaQQvnaJSqAIOtsV1tGHRL9vc7G1YEj398OH5yfGxqPlIzU80aYqwqou
+ HqbWKerw6c7pfIQ6JJ1oG2JIsSUjax+9uROcS+dvvILKQ/o2TlHUtV6J2PnVWuCI
+ cKVx9n5vze+izS3Zh8goBC2MS8WoPZM3qxo47e2zjawx2XJmhzRCXFaj8Ci/U36r
+ Kiy/Uzw7otVsjJuGjqynRZ0l+MxsdsQ/VlwVstU6Lw+mdt90UIVYP+jR52d0+Mw0
+ 5mALK+gGvJSprseQf6anM7IqzhU9yc3HeBp79GHsgcc2Y1aAJj1QYlkTdDUxaCtW
+ XcB1H5QfTxHPpMbGu+ER1nM4oQe8ZoBOcN2bff9VA+OlwRiFqub7rmCT0bbvF4cH
+ NqXXYu4rWSu/nlKIqqiLETDTKpWUCB7A9wVL4NYqJAAumfvoMuwjijsgAxCriOzO
+ onod1XT2Mgt2gkz2O3X/+izMDkisvCtKX937OLr8sh1jUDLojEiet+NxbxkrIvDy
+ hLzLJfYlcdmRfpGOfx8Abc31FAg29GoaHA==
+ =PWLF
+ -----END PGP PUBLIC KEY BLOCK-----
+Enabled: no
+
+### /etc/apt/sources.list.d/openshot_developers-ubuntu-ppa-resolute.sources
+Types: deb
+URIs: https://ppa.launchpadcontent.net/openshot.developers/ppa/ubuntu/
+Suites: resolute
+Components: main
+Signed-By: 
+ -----BEGIN PGP PUBLIC KEY BLOCK-----
+ .
+ mQINBGYzdhsBEACbxXcAviMXN2T3IR3qPIVpKq4iAkFp+x9wJte8s1+Sia1PqWlG
+ mKQmdjr9cnXccymaqeOeW3a5BBLIarwgwR1L30dRTTe0mhewjRqOtN5uYfv6tPQU
+ yPGqtRxn+5McgiOBrR+bdPiIEqIO8bqLBm1pxKg5Tw4XuiciwvCdVx40+ptqIzf+
+ 2wkpc32y+9fwo8cda3GeNXRMPzLyVH47+6Pk6GtBLZ3mt4ULDT4DrhLAUYk6Qcpr
+ FkynmzakT0IT0JWGDv44T8F6ZAyvXR5Ej2hmM+lbXYx9fFg4tqfPC+lzw1H+ag9V
+ un5asVaHVvDUGT9m8hf0bgZOlb4MD2MwWMJcioUNWNR0i1Y9TYL0lX+mOh5THbho
+ vjNsynFD9BH29XKgUTok0ceyp5zQK/3VxqXEckYx/aAwQMpvLR1eJAY9XzabPYww
+ 5By0jWx8md2n+NEBBq8bCyQxVAR6Qc6YANnGT5wT1dbmcYfgPiM/fB5Qo1SmyrJT
+ wqoNP+MtW6grK5Wldrr7ChsvT0nNMbEdbXfa1c9oaoU8yyshQEVtx4UsSz9vIchK
+ Hr3FN6Q0hqY32vC2tNISYB1PSuw8G3qCym51QGYtgOcNJr2h3w2uZ1Oh06HNA8Ib
+ SaSdee68BUWoUlVK255VGj7yMLCxjbn1PxyaFeB2M8RLzS0dzi5qqgIR5wARAQAB
+ tCVMYXVuY2hwYWQgUFBBIGZvciBPcGVuU2hvdCBEZXZlbG9wZXJziQJOBBMBCgA4
+ FiEEsRjxj1wqqZhDbxYD3J4yaJA0jDAFAmYzdhsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AACgkQ3J4yaJA0jDBWOhAAhCTkI5ISzq/uuoVzomWt0JLgxV5DTb9B
+ V4LKYd+FqVGUlkchWYBwD6m8rU33+F8wx7srCrVp1lA0tJXJH0wggKg0O2m/TgGU
+ 0kfvpWauN/RrH3nFcx5lXnWIuchQypvZju8Y3kHvg24KszQkk0k30+p3lD1OFZLZ
+ 3ciR6y1GyKU+N2feQfaKA9kKJ7L9gepfXQcqOq7N7qhV8bcoMkj5nKoCFa6rRClJ
+ GeMrFFcrrt+aczHNTxIxCFFepY0d+GonuuDPPuhG2NM/Y+2p0E4HGMMqtJyUR84n
+ PljMbj+2TBp16Dh4+ud7lrZ9H76Dajb1TxGcK5oFFtEeJiOl58qA1UBWjCt+Cq3y
+ K48t6IH8PRwxPlGkbnpOElnEU9SVZ2zLWK3GPwJdF0PgcamO7c3tzcibWD7YNVEQ
+ sspjvM3ggXvJ0Eq80zK/TkjjnnmWUoQAYuZJ+eJZkcFq7sNzq9KWhv3b+oqvqvJb
+ teH1cRT8FXSr4QOIoB0dryrXydhSGjpicspn/eChtaU6+1iOXYCdf1qcLpzyR0e0
+ ByUcZ80+nzhiPWuL2+vy0cW7FoC7nXTbFj+r93S0l/kpRWFrJV3BvOniVre+BwXK
+ LpZzA8cVsLLjMP2jjpxfaZyPu63Bh+/59FW4Hdt5HT719VQfusa8P/2fB0cXXxfX
+ lkChD4VjqkU=
+ =i7SS
+ -----END PGP PUBLIC KEY BLOCK-----
+
+### /etc/apt/sources.list.d/repo.fortinet.com.sources
+Types: deb
+URIs: https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/
+Suites: stable
+Components: non-free
+Signed-By: /usr/share/keyrings/repo.fortinet.com.gpg
+Enabled: no
+
+### /etc/apt/sources.list.d/tailscale.list
+deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu resolute main
+
+### /etc/apt/sources.list.d/warpdotdev.list
+deb [arch=amd64 signed-by=/usr/share/keyrings/warpdotdev.gpg] https://releases.warp.dev/linux/deb stable main
+
+### /etc/apt/sources.list.d/waydroid.list
+deb [signed-by=/usr/share/keyrings/waydroid.gpg] https://repo.waydro.id/ resolute main
+

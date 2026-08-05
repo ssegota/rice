@@ -1,0 +1,167 @@
+# ~/.config/starship.toml
+# Tokyo Night — framed bubble prompt for Python (conda/uv), Node & LaTeX on AWS.
+# Requires a Nerd Font (https://www.nerdfonts.com).
+#
+# IMPORTANT: `palette` must stay at the TOP, before any [table]. If it sits
+# after [palettes.*] it gets nested inside that table and no colors apply.
+
+palette = "tokyo_night"
+
+format = """
+[╭](fg:iris)[─](fg:overlay)\
+$os\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$conda\
+${custom.uv}\
+$nodejs\
+${custom.latex}\
+$fill\
+$aws\
+$cmd_duration\
+$time\
+$line_break\
+[╰─](fg:overlay)$character"""
+
+command_timeout = 1000
+add_newline = true
+
+# ── Core: OS + directory (powerline head) ──────────────────────────────────
+[os]
+disabled = false
+format = "[](fg:iris)[ $symbol ](bg:iris fg:ink)[](fg:iris bg:blue)"
+
+[os.symbols]
+Ubuntu = "󰕈"
+Debian = "󰣚"
+Macos = "󰀵"
+Windows = "󰍲"
+Arch = "󰣇"
+Linux = "󰌽"
+Fedora = "󰣛"
+
+[directory]
+format = "[ 󰉋 $path ]($style)[](fg:blue)"
+style = "bg:blue fg:ink"
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = " 󰌾"
+read_only_style = "fg:red bg:blue"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+"dev" = "󰲋 "
+
+# ── Git ─────────────────────────────────────────────────────────────────────
+[git_branch]
+symbol = ""
+format = "[](fg:green)[ $symbol $branch ]($style)[](fg:green)"
+style = "bg:green fg:ink"
+
+[git_status]
+format = "([](fg:red)[ $all_status$ahead_behind]($style)[](fg:red))"
+style = "bg:red fg:ink"
+conflicted = "⚔ "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "󰏗 "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+# ── Python ecosystem (iris family) ──────────────────────────────────────────
+[python]
+symbol = " "
+format = "[](fg:magenta)[ $symbol$version( 󰆧 $virtualenv) ]($style)[](fg:magenta)"
+style = "bg:magenta fg:ink"
+python_binary = ["python3", "python"]
+detect_extensions = ["py"]
+detect_files = ["requirements.txt", "pyproject.toml", "setup.py", "Pipfile", ".python-version", "uv.lock", "environment.yml"]
+
+[conda]
+symbol = "󱔎 "
+format = "[](fg:magenta)[ $symbol$environment ]($style)[](fg:magenta)"
+style = "bg:magenta fg:ink"
+ignore_base = true
+
+[custom.uv]
+description = "uv version when a uv.lock is present"
+detect_files = ["uv.lock"]
+command = "uv --version 2>/dev/null | cut -d' ' -f2"
+symbol = " "
+format = "[](fg:magenta)[ $symbol$output ]($style)[](fg:magenta)"
+style = "bg:magenta fg:ink"
+ignore_timeout = true
+
+# ── Node ─────────────────────────────────────────────────────────────────────
+[nodejs]
+symbol = " "
+format = "[](fg:cyan)[ $symbol$version ]($style)[](fg:cyan)"
+style = "bg:cyan fg:ink"
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+detect_folders = ["node_modules"]
+
+# ── LaTeX ────────────────────────────────────────────────────────────────────
+[custom.latex]
+description = "LaTeX badge in TeX projects"
+detect_extensions = ["tex", "bib", "cls", "sty"]
+command = "echo LaTeX"
+symbol = " "
+format = "[](fg:teal)[ $symbol$output ]($style)[](fg:teal)"
+style = "bg:teal fg:ink"
+
+# ── Right side ───────────────────────────────────────────────────────────────
+[fill]
+symbol = "─"
+style = "fg:overlay"
+
+[aws]
+symbol = " "
+# Shows the full region name, e.g. @eu-north-1. To shorten specific regions,
+# add an [aws.region_aliases] table below (e.g. eu-north-1 = "sto").
+format = "[](fg:orange)[ $symbol($profile)(@$region) ]($style)[](fg:orange)"
+style = "bg:orange fg:ink"
+expiration_symbol = "⏰"
+
+[cmd_duration]
+min_time = 500
+format = "[](fg:surface)[ 󱎫 $duration ]($style)[](fg:surface)"
+style = "bg:surface fg:yellow"
+
+[time]
+disabled = false
+time_format = "%H:%M"
+format = "[](fg:surface)[ 󰅐 $time ]($style)[](fg:surface)"
+style = "bg:surface fg:fg"
+
+# ── Prompt character ─────────────────────────────────────────────────────────
+[character]
+success_symbol = "[ ❯](bold green)"
+error_symbol = "[ ❯](bold red)"
+vimcmd_symbol = "[ ❮](bold iris)"
+
+# ── Tokyo Night palette ──────────────────────────────────────────────────────
+[palettes.tokyo_night]
+fg = "#c0caf5"
+ink = "#16161e"
+bg = "#1a1b26"
+surface = "#414868"
+overlay = "#565f89"
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+magenta = "#bb9af7"
+iris = "#7aa2f7"
+red = "#f7768e"
+orange = "#ff9e64"
+yellow = "#e0af68"
+teal = "#2ac3de"

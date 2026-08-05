@@ -1,0 +1,12 @@
+# These need their repo added first — see scripts/apt-sources.sh
+google-chrome-stable
+warp-terminal
+cursor
+antigravity
+tailscale
+waydroid
+virtualbox-7.2
+discord
+viber
+rustdesk
+obsidian

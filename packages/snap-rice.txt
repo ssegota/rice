@@ -1,0 +1,13 @@
+# format: <snap>[ --classic]
+# base/core/theme snaps are pulled in automatically — not listed here.
+code --classic
+ghostty --classic
+firefox
+thunderbird
+signal-desktop
+telegram-desktop
+teams-for-linux
+termius-app
+steam
+jdownloader2
+snap-store

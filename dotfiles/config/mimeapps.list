@@ -1,0 +1,34 @@
+[Default Applications]
+x-scheme-handler/http=firefox_firefox.desktop
+x-scheme-handler/https=firefox_firefox.desktop
+inode/directory=pcmanfm.desktop
+application/x-gnome-saved-search=nemo.desktop
+text/html=firefox_firefox.desktop
+x-scheme-handler/about=firefox_firefox.desktop
+x-scheme-handler/unknown=firefox_firefox.desktop
+x-scheme-handler/viber=viber.desktop
+image/jpeg=org.nomacs.ImageLounge.desktop
+x-scheme-handler/mailto=thunderbird.desktop
+x-scheme-handler/mid=thunderbird.desktop
+application/pdf=okularApplication_pdf.desktop
+image/png=org.nomacs.ImageLounge.desktop
+image/gif=org.nomacs.ImageLounge.desktop
+image/webp=org.nomacs.ImageLounge.desktop
+image/bmp=org.nomacs.ImageLounge.desktop
+image/tiff=org.nomacs.ImageLounge.desktop
+image/x-icns=org.nomacs.ImageLounge.desktop
+text/plain=code.desktop
+text/x-python=code.desktop
+text/x-c=code.desktop
+text/markdown=code.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+x-scheme-handler/hps-5893=hps-5893-8.0.5.desktop
+
+[Added Associations]
+text/x-lua=notepad-plus-plus_notepad-plus-plus.desktop;
+image/jpeg=org.gnome.eog.desktop;
+application/pdf=okularApplication_pdf.desktop;
+text/plain=code.desktop;
+text/x-python=code.desktop;
+text/x-c=code.desktop;
+text/markdown=code.desktop;

@@ -1,0 +1,82 @@
+# ~/.config/ghostty/config
+# Tokyo Night — tuned to match the framed Starship prompt.
+# Reload after editing:  Linux  ctrl+shift+,   macOS  cmd+shift+,
+
+# ── Font ─────────────────────────────────────────────────────────────────────
+# Ghostty already bundles a Symbols Nerd Font fallback, so icons work even
+# without this. Setting one explicit Nerd Font keeps glyph metrics consistent
+# so the powerline bubble caps align perfectly with the text.
+font-family = "JetBrainsMono Nerd Font"
+# Optional extra fallback (uncomment if some glyphs go missing):
+# font-family = "Symbols Nerd Font"
+font-size = 13
+font-thicken = true
+
+# Ligatures on (set to -calt / -liga to disable)
+font-feature = calt
+font-feature = liga
+
+# ── Colors: Tokyo Night (self-contained, matches the prompt palette) ─────────
+# Prefer Ghostty's bundled theme instead? Comment this whole block and use:
+#   theme = TokyoNight
+# (run `ghostty +list-themes | grep -i tokyo` to see the exact names)
+background = #1a1b26
+foreground = #c0caf5
+cursor-color = #c0caf5
+cursor-text = #1a1b26
+selection-background = #283457
+selection-foreground = #c0caf5
+
+# Normal
+palette = 0=#15161e
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#a9b1d6
+# Bright
+palette = 8=#414868
+palette = 9=#f7768e
+palette = 10=#9ece6a
+palette = 11=#e0af68
+palette = 12=#7aa2f7
+palette = 13=#bb9af7
+palette = 14=#7dcfff
+palette = 15=#c0caf5
+
+# ── Window & background ──────────────────────────────────────────────────────
+background-opacity = 0.95
+# Blur is honored on macOS and KDE; ignored elsewhere (harmless).
+background-blur-radius = 20
+
+# Breathing room so the ╭─ … ╰─❯ frame reads as intentional, not cramped.
+window-padding-x = 12
+window-padding-y = 8
+window-padding-balance = true
+
+window-decoration = true
+window-theme = auto
+
+# ── Cursor ───────────────────────────────────────────────────────────────────
+cursor-style = bar
+cursor-style-blink = false
+
+# ── Behavior / quality of life ───────────────────────────────────────────────
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+clipboard-read = allow
+clipboard-write = allow
+scrollback-limit = 100000
+confirm-close-surface = false
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# macOS only: use left Option as Alt for shell keybindings (harmless on Linux)
+macos-option-as-alt = left
+
+# ── A couple of handy keybinds ───────────────────────────────────────────────
+keybind = ctrl+shift+enter=new_split:right
+keybind = ctrl+shift+minus=new_split:down
+
