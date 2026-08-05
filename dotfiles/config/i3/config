@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:JetBrainsMono Nerd Font 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -43,13 +43,21 @@ exec --no-startup-id nm-applet
 default_border pixel 3
 default_floating_border pixel 3
 
-# Use pactl to adjust volume in PulseAudio.
-# Define the variable (this part was correct)
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
-bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioMicMute     exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+# Volume — wpctl (PipeWire), 5% steps, capped at 100% (was pactl ±10%, uncapped)
+bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioMute        exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym XF86AudioMicMute     exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+# Media keys — playerctl
+bindsym XF86AudioPlay  exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext  exec --no-startup-id playerctl next
+bindsym XF86AudioPrev  exec --no-startup-id playerctl previous
+
+# Brightness keys — brightnessctl (was scroll-on-polybar only)
+bindsym XF86MonBrightnessUp   exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -117,6 +125,12 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+d exec --no-startup-id rofi -show drun
 bindsym $mod+Tab exec --no-startup-id rofi -show window
 bindsym $mod+Shift+e exec --no-startup-id ~/.local/bin/rofi-power
+bindsym $mod+Shift+w exec --no-startup-id ~/.local/bin/rofi-wallpaper
+bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+
+# notifications (dunst)
+bindsym $mod+n exec --no-startup-id dunstctl history-pop
+bindsym $mod+Shift+n exec --no-startup-id dunstctl close-all
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
@@ -138,6 +152,9 @@ set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
+
+# pressing the current workspace's number again jumps back to the previous one
+workspace_auto_back_and_forth yes
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -213,31 +230,22 @@ exec_always --no-startup-id xrandr --output eDP-1 --mode 1920x1200
 exec_always --no-startup-id xrandr --output DP-1-3 --right-of eDP-1 --mode 1920x1080
 exec_always --no-startup-id xrandr --output DP-1-1 --right-of DP-1-3 --mode 1280x1024
 exec_always --no-startup-id xrandr --output DP-1 --right-of eDP-1 --mode 1920x1080 --rotate right
-bindsym $mod+p exec --no-startup-id xrandr --output HDMI-1 --left-of eDP-1 
+bindsym $mod+p exec --no-startup-id xrandr --output HDMI-1 --left-of eDP-1
+# autorandr re-applies the saved profile for whatever is plugged in.
+# Save a profile at each dock ("autorandr --save <name>"); once every setup
+# you use has one, the hardcoded xrandr lines above can be deleted.
+exec_always --no-startup-id sh -c 'command -v autorandr >/dev/null && sleep 1 && autorandr --change'
 exec_always --no-startup-id /home/sbs/.config/polybar/launch.sh
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/grayscale.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/gundam-3.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpaper.png
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/nvidia-blueprint-2.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/book-of-ra.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/thinkpad.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/memento-mori.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/thinkpad-3.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-night.jpg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-houses.png
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-mask.png
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-maze.png
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-sushi.png
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/tokyo-gundam.jpeg
-#exec_always --no-startup-id feh --bg-fill /home/sbs/Pictures/wallpapers/feed.jpg
-#
-#exec --no-startup-id nitrogen --restore
-# Disable screen blanking and power saving
-exec_always --no-startup-id feh --bg-fill /usr/share/backgrounds/osselo-Ask_a_friend.jpg  /home/sbs/Pictures/wallpapers/v-eva.png
+# Wallpaper — ~/.fehbg holds the current choice (two images = one per monitor).
+# Change it interactively with Super+Shift+w (rofi-wallpaper).
+exec_always --no-startup-id ~/.fehbg
 
-exec --no-startup-id xset s off          # Disable screen saver
-exec --no-startup-id xset -dpms          # Disable DPMS (screen power saving)
-exec --no-startup-id xset s noblank      # Prevent screen from blanking
+# Screen saver off, but let DPMS power the panel down after 10 min idle
+# (was fully disabled — screens never slept, which costs battery)
+exec --no-startup-id xset s off
+exec --no-startup-id xset s noblank
+exec --no-startup-id xset +dpms
+exec --no-startup-id xset dpms 0 0 600
 exec --no-startup-id picom -b --config ~/.config/picom/picom.conf
 exec --no-startup-id guake
 
@@ -253,20 +261,23 @@ exec --no-startup-id /usr/lib/x86_64-linux-gnu/libexec/polkit-kde-authentication
 exec --no-startup-id gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 exec --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 
-# Class              Border    Background Text      Indicator Child Border
-# Focused: Dark Blue (Switched)
-client.focused    #00008B   #1a1a63  #FFFFFF   #00008B   #00008B
-
-# Urgent: Red (Unchanged)
-client.urgent     #FF0000   #c0392b  #FFFFFF   #FF0000   #FF0000
-
-# Focused Inactive: Sky Blue (Switched)
-client.focused_inactive #87CEEB   #2980b9  #EEEEEE   #87CEEB   #87CEEB
-
-# Unfocused: Black (Unchanged)
-client.unfocused  #000000   #1a1a1a  #BBBBBB   #000000   #000000
+# Window colors — Tokyo Night (same palette as ghostty/kitty/starship/polybar/rofi)
+# Class                  Border   Background Text     Indicator Child Border
+client.focused           #7aa2f7  #1a1b26   #c0caf5  #7dcfff   #7aa2f7
+client.focused_inactive  #414868  #1a1b26   #a9b1d6  #414868   #414868
+client.unfocused         #16161e  #1a1b26   #565f89  #16161e   #16161e
+client.urgent            #f7768e  #1a1b26   #c0caf5  #f7768e   #f7768e
 
 exec --no-startup-id ~/.config/i3/scripts/battery-alert.sh
+
+# Clipboard history daemon — browse with Super+c (rofi front-end)
+exec --no-startup-id sh -c 'command -v greenclip >/dev/null && greenclip daemon'
+
+# Night light — no-op until gammastep is installed (config: ~/.config/gammastep)
+exec --no-startup-id sh -c 'command -v gammastep >/dev/null && gammastep'
+
+# Alternate split direction automatically (spiral layouts instead of slivers)
+exec_always --no-startup-id sh -c 'pkill -f "[a]utotiling"; command -v autotiling >/dev/null && exec autotiling'
 
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="dialog"] floating enable

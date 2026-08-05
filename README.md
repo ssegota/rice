@@ -18,7 +18,7 @@ X11 + i3 + LightDM, Croatian keyboard layout.
 │  Theme       Adwaita-dark + Adwaita icons (via nwg-look / lxappearance) │
 │  Wallpaper   feh, set from ~/.fehbg at i3 startup                       │
 │  Lock        i3lock-fancy — Super+Escape, rofi power menu, and xss-lock │
-│  Notifs      dunst (stock config — you never customised it)             │
+│  Notifs      dunst — Tokyo Night theme; Super+n pops history              │
 │  Gestures    libinput-gestures — 3-finger swipe = workspace nav         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -49,7 +49,7 @@ It's staged and re-runnable. Anything it replaces in `$HOME` is copied to
 | `--sources` | adds third-party apt repos (Chrome, Warp, Tailscale, NodeSource, Waydroid, 2 PPAs) |
 | `--packages` | ~120 apt packages from `packages/apt-rice.txt` |
 | `--snaps` | snaps from `packages/snap-rice.txt` |
-| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink |
+| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, autotiling, greenclip |
 | `--dotfiles` | configs into `$HOME`, with backups |
 | `--wallpapers` | images into `~/Pictures/wallpapers` |
 | `--fonts` | downloads JetBrainsMono Nerd Font |
@@ -69,7 +69,7 @@ rice/
 ├── dotfiles/
 │   ├── home/                   → $HOME          .bashrc .profile .vimrc .gitconfig …
 │   ├── config/                 → ~/.config      i3 polybar picom rofi ghostty starship …
-│   └── local-bin/              → ~/.local/bin   rofi-power
+│   └── local-bin/              → ~/.local/bin   rofi-power rofi-wallpaper
 ├── wallpapers/                 32 images (~56 MB) → ~/Pictures/wallpapers
 ├── fonts/install-fonts.sh      JetBrainsMono Nerd Font
 ├── packages/
@@ -114,6 +114,15 @@ the Croatian layout; on a US layout that key is `;`.
 | `Super+Shift+c` / `Super+Shift+r` | reload / restart i3 |
 | 3-finger swipe L/R | previous / next workspace |
 | 3-finger swipe up | last workspace (`back_and_forth`) |
+| 🆕 `Super+Shift+w` | wallpaper picker (rofi, with thumbnails) |
+| 🆕 `Super+c` | clipboard history (greenclip → rofi) |
+| 🆕 `Super+n` / `Super+Shift+n` | notification history / close all (dunst) |
+| 🆕 `Super+<current ws number>` | jumps back to the previous workspace |
+| 🆕 volume keys | 5% steps now, capped at 100% (was ±10%, uncapped) |
+| 🆕 play / next / prev media keys | playerctl |
+| 🆕 brightness keys | brightnessctl ±5% (was polybar-scroll only) |
+
+🆕 = added in round 2 (see below) — try them out.
 
 ## Shell
 
@@ -172,6 +181,59 @@ the live machine and this bundle; two are intentional and documented so nobody
    On a machine without Anaconda it prints an error on every shell start, so
    `install.sh` warns about it — install Anaconda, or delete the
    `>>> conda initialize >>>` block on that machine only.
+
+## Round 2 — 2026-08-05, same day
+
+A second pass fixed what the first packaging round missed and added a few
+quality-of-life tools. Everything below is in both the bundle and the live
+machine.
+
+### Fixed
+
+1. **`picom.conf` was two whole configs concatenated** — conflicting values
+   (corner-radius 12 vs 8, inactive-opacity 0.9 vs 1.0), plus a typo
+   (`cladd_g`) that killed the Guake slide-in animation, plus deprecated
+   `:c`/`:a` type specifiers and `mark-*-focused` options. Merged into one
+   config; typo fixed; picom v12.5 parses it warning-free.
+2. **The rice wasn't actually Tokyo Night outside the terminals.** Polybar's
+   palette was Nord, i3's window borders were arbitrary blues, rofi was a
+   grey macOS-Spotlight clone. All three now use the exact palette from
+   `starship.toml` (bg `#1a1b26`, fg `#c0caf5`, accent `#7aa2f7`,
+   urgent `#f7768e`).
+3. **rofi's theme asked for Montserrat**, which was never installed anywhere —
+   silent fallback to a default sans. Now JetBrainsMono Nerd Font like
+   everything else.
+4. **i3's titlebar font was stock `monospace 8`** → JetBrainsMono Nerd Font 10.
+5. **Hardware keys**: brightness keys now work (`brightnessctl`), media keys
+   now work (`playerctl`), volume steps are 5% capped at 100% via `wpctl`
+   (were 10% and could exceed 100%).
+6. **`.fehbg` referenced `/usr/share/backgrounds/`** — a path that only exists
+   on stock Ubuntu. Both images now live in `~/Pictures/wallpapers`, and the
+   i3 config runs `~/.fehbg` instead of duplicating the feh command. The
+   15 commented-out wallpaper lines in the i3 config are gone — use the
+   `Super+Shift+w` picker instead.
+7. **Screens never powered down** (`xset -dpms`). DPMS now blanks after
+   10 idle minutes; the X screensaver stays off.
+
+### Added
+
+- **dunst is themed** (`config/dunst/dunstrc`) — Tokyo Night, rounded,
+  Papirus icons. `Super+n` re-shows the last notification,
+  `Super+Shift+n` clears all.
+- **`rofi-wallpaper`** (`Super+Shift+w`) — thumbnail picker over
+  `~/Pictures/wallpapers`; persists via `~/.fehbg`. Picking one image sets it
+  on all monitors — for per-monitor wallpapers edit `~/.fehbg` by hand.
+- **greenclip** (`Super+c`) — clipboard history, daemon started by i3.
+- **autotiling** — splits alternate h/v automatically by window shape.
+- **autorandr** — current two-monitor layout saved as profile `home`.
+  Save one per dock (`autorandr --save officedock`), then the hardcoded
+  xrandr lines in the i3 config can go. Installed as a uv tool for now;
+  `sudo apt install autorandr` adds hotplug udev rules.
+- **gammastep** (night light) — config is in place
+  (`config/gammastep/config.ini`, location set to Zagreb — adjust); i3
+  starts it automatically once `sudo apt install gammastep` has been run.
+- `workspace_auto_back_and_forth` — tapping the current workspace's number
+  bounces back to the previous one.
 
 ## Not captured
 

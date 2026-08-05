@@ -1,16 +1,18 @@
 /* MACOS SPOTLIGHT LIKE DARK THEME FOR ROFI  */
 /* Author: Newman Sanchez (https://github.com/newmanls) */
+/* Repainted 2026-08-05: Tokyo Night palette (matches ghostty/kitty/starship), */
+/* font switched from Montserrat (never installed) to the rice's Nerd Font.    */
 
 * {
-    font:   "Montserrat 12";
+    font:   "JetBrainsMono Nerd Font 12";
 
-    bg0:    #242424E6;
-    bg1:    #7E7E7E80;
-    bg2:    #0860f2E6;
+    bg0:    #1a1b26E6;
+    bg1:    #41486880;
+    bg2:    #7aa2f7E6;
 
-    fg0:    #DEDEDE;
-    fg1:    #FFFFFF;
-    fg2:    #DEDEDE80;
+    fg0:    #c0caf5;
+    fg1:    #16161e;
+    fg2:    #c0caf580;
 
     background-color:   transparent;
     text-color:         @fg0;
@@ -29,7 +31,7 @@ window {
 }
 
 inputbar {
-    font:       "Montserrat 20";
+    font:       "JetBrainsMono Nerd Font 16";
     padding:    12px;
     spacing:    12px;
     children:   [ icon-search, entry ];

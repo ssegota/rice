@@ -1,2 +1,5 @@
 #!/bin/sh
-feh --no-fehbg --bg-fill '/usr/share/backgrounds/osselo-Ask_a_friend.jpg' '/home/sbs/Pictures/wallpapers/v-eva.png' 
+# Two images = one per monitor, in xrandr output order (deliberate).
+# Paths live under $HOME so this works on a fresh machine — install.sh puts
+# the images in ~/Pictures/wallpapers.
+feh --no-fehbg --bg-fill "$HOME/Pictures/wallpapers/osselo-Ask_a_friend.jpg" "$HOME/Pictures/wallpapers/v-eva.png"

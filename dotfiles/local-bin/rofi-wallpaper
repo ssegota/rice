@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# rofi-wallpaper — visual wallpaper picker (Super+Shift+w)
+#
+# Shows every image in ~/Pictures/wallpapers with a thumbnail; Enter sets it
+# on ALL monitors via feh --bg-fill, which also rewrites ~/.fehbg so the
+# choice persists across logins.
+#
+# NOTE: picking one here replaces the two-image (per-monitor) .fehbg setup.
+# To go back to different wallpaper per screen, edit ~/.fehbg by hand and
+# list one image per monitor in xrandr output order.
+set -euo pipefail
+
+WALLDIR="$HOME/Pictures/wallpapers"
+
+choice="$(
+  find "$WALLDIR" -maxdepth 1 -type f \
+       \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -printf '%f\n' \
+    | sort \
+    | while IFS= read -r f; do
+        printf '%s\0icon\x1f%s\n' "$f" "$WALLDIR/$f"
+      done \
+    | rofi -dmenu -i -show-icons -p "wallpaper"
+)"
+
+[ -n "$choice" ] || exit 0
+exec feh --bg-fill "$WALLDIR/$choice"

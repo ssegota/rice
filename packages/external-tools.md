@@ -10,3 +10,6 @@
 | vim-plug + plugins | `.vimrc` uses `call plug#begin()` | install.sh bootstraps plug, then run `:PlugInstall` |
 | claude / cursor-agent / codex / copilot CLIs | vendor installers into `~/.local/bin` | re-auth each one manually |
 | conda (anaconda3) | Anaconda installer → `~/anaconda3` | `.bashrc` has a conda init block that breaks the prompt if missing |
+| autotiling | `uv tool install autotiling` → `~/.local/bin` | i3 config `exec_always`'s it; alternates split direction |
+| greenclip | static binary from <https://github.com/erebe/greenclip/releases> → `~/.local/bin` | clipboard history daemon; rofi front-end on `Super+c` |
+| autorandr (this machine only) | `uv tool install autorandr` | stopgap until `sudo apt install autorandr` (apt adds hotplug udev rules — then `uv tool uninstall autorandr`); profiles live in `~/.config/autorandr` |

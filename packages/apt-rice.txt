@@ -22,6 +22,8 @@ network-manager-gnome
 blueman
 brightnessctl
 playerctl
+autorandr
+gammastep
 pavucontrol
 pulseaudio-utils
 libinput-tools

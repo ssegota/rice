@@ -212,6 +212,29 @@ stage_external() {
   else
     warn "neither fd nor fdfind found — fzf's file widgets won't work"
   fi
+
+  # autotiling — i3 config exec_always's it (alternating split direction)
+  if have autotiling; then skip "autotiling (present)"
+  elif [ -x "$HOME/.local/bin/uv" ]; then
+    ok "installing autotiling via uv tool"
+    run "$HOME/.local/bin/uv" tool install autotiling
+  else
+    warn "uv missing — install autotiling later: uv tool install autotiling"
+  fi
+
+  # greenclip — clipboard history daemon, rofi front-end on Super+c
+  if have greenclip; then skip "greenclip (present)"
+  else
+    ok "installing greenclip → ~/.local/bin (static binary)"
+    run mkdir -p "$HOME/.local/bin"
+    run curl -fsSL -o "$HOME/.local/bin/greenclip" \
+      https://github.com/erebe/greenclip/releases/latest/download/greenclip
+    run chmod +x "$HOME/.local/bin/greenclip"
+  fi
+
+  # autorandr profiles are per-machine: save one at each monitor setup with
+  # `autorandr --save <name>` (the apt package provides hotplug udev rules).
+  have autorandr && skip "autorandr present — remember to --save a profile per dock"
 }
 
 stage_dotfiles() {
@@ -272,12 +295,6 @@ stage_wallpapers() {
     cp -an "$RICE_DIR"/wallpapers/. "$HOME/Pictures/wallpapers/" 2>/dev/null
     ok "$(find "$HOME/Pictures/wallpapers" -maxdepth 1 -type f | wc -l) files present"
   fi
-  # .fehbg / i3 config reference this distro wallpaper by absolute path
-  if [ ! -f /usr/share/backgrounds/osselo-Ask_a_friend.jpg ] \
-     && [ -f "$RICE_DIR/wallpapers/osselo-Ask_a_friend.jpg" ]; then
-    ok "restoring /usr/share/backgrounds/osselo-Ask_a_friend.jpg (referenced by .fehbg)"
-    run sudo cp "$RICE_DIR/wallpapers/osselo-Ask_a_friend.jpg" /usr/share/backgrounds/
-  fi
 }
 
 stage_fonts() {
@@ -335,8 +352,8 @@ ${B}Done.${R} What's left, in order:
 
   1. ${B}Log out and pick "i3"${R} at the LightDM session menu.
   2. ${B}exec bash${R} (or new terminal) to load the new prompt.
-  3. Wallpaper: ${DIM}~/.fehbg${R} runs at i3 start — edit it or the
-     ${DIM}exec_always ... feh --bg-fill${R} line in ~/.config/i3/config.
+  3. Wallpaper: ${B}Super+Shift+w${R} picks one interactively; ${DIM}~/.fehbg${R}
+     holds the choice (two images there = one per monitor).
   4. In vim: ${B}:PlugInstall${R}
   5. Fingerprint reader, if the hardware has one: ${B}fprintd-enroll${R}
   6. ${B}Secrets are deliberately not in this bundle.${R} See ${B}secrets/README.md${R}
@@ -348,6 +365,8 @@ ${B}Done.${R} What's left, in order:
     Super+Shift+q kill window      Super+Shift+e  power menu
     Super+Escape  lock             F12            guake dropdown
     Print         flameshot        Super+r        resize mode
+    Super+c       clipboard hist   Super+n        notification history
+    Super+Shift+w wallpaper picker
     Focus/move:   j / k / l / č    (yes, č — Croatian layout)
 
   Backups of anything replaced: ${DIM}${BACKUP_DIR}${R}
@@ -379,7 +398,8 @@ Stages (default = all, in this order):
   --sources     add third-party apt repos (Chrome, Warp, Tailscale, Node, …)
   --packages    apt packages from packages/apt-rice.txt
   --snaps       snaps from packages/snap-rice.txt
-  --external    starship, uv, flyctl, libinput-gestures, vim-plug, fd symlink
+  --external    starship, uv, flyctl, libinput-gestures, vim-plug, fd symlink,
+                autotiling, greenclip
   --dotfiles    configs into $HOME (backs up whatever it replaces)
   --wallpapers  images into ~/Pictures/wallpapers
   --fonts       JetBrainsMono Nerd Font
