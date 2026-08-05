@@ -213,15 +213,6 @@ stage_external() {
     warn "neither fd nor fdfind found — fzf's file widgets won't work"
   fi
 
-  # autotiling — i3 config exec_always's it (alternating split direction)
-  if have autotiling; then skip "autotiling (present)"
-  elif [ -x "$HOME/.local/bin/uv" ]; then
-    ok "installing autotiling via uv tool"
-    run "$HOME/.local/bin/uv" tool install autotiling
-  else
-    warn "uv missing — install autotiling later: uv tool install autotiling"
-  fi
-
   # greenclip — clipboard history daemon, rofi front-end on Super+c
   if have greenclip; then skip "greenclip (present)"
   else
@@ -399,7 +390,7 @@ Stages (default = all, in this order):
   --packages    apt packages from packages/apt-rice.txt
   --snaps       snaps from packages/snap-rice.txt
   --external    starship, uv, flyctl, libinput-gestures, vim-plug, fd symlink,
-                autotiling, greenclip
+                greenclip
   --dotfiles    configs into $HOME (backs up whatever it replaces)
   --wallpapers  images into ~/Pictures/wallpapers
   --fonts       JetBrainsMono Nerd Font

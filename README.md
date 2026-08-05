@@ -49,7 +49,7 @@ It's staged and re-runnable. Anything it replaces in `$HOME` is copied to
 | `--sources` | adds third-party apt repos (Chrome, Warp, Tailscale, NodeSource, Waydroid, 2 PPAs) |
 | `--packages` | ~120 apt packages from `packages/apt-rice.txt` |
 | `--snaps` | snaps from `packages/snap-rice.txt` |
-| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, autotiling, greenclip |
+| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, greenclip |
 | `--dotfiles` | configs into `$HOME`, with backups |
 | `--wallpapers` | images into `~/Pictures/wallpapers` |
 | `--fonts` | downloads JetBrainsMono Nerd Font |
