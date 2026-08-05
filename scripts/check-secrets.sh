@@ -10,7 +10,12 @@
 #
 set -uo pipefail
 
-RICE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+# Resolve the bundle root. Prefer git, because when this runs as
+# .git/hooks/pre-commit the script path points inside .git/ and deriving the
+# root from BASH_SOURCE would scan .git/ instead of the repo — silently passing.
+if ! RICE_DIR="$(git rev-parse --show-toplevel 2>/dev/null)" || [ -z "$RICE_DIR" ]; then
+  RICE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
 B=$'\033[1m'; R=$'\033[0m'; RED=$'\033[38;5;210m'; GRN=$'\033[38;5;150m'; YEL=$'\033[38;5;222m'
 FOUND=0
 
@@ -61,7 +66,22 @@ for pat in "${PATTERNS[@]}"; do
              "$pat" "$RICE_DIR" 2>/dev/null | cut -c1-160)
 done
 
-# ── 4. Loose reminders ───────────────────────────────────────────────────────
+# ── 4. Staged blobs, when running as a pre-commit hook ───────────────────────
+# The worktree scan above misses a file that was staged with a secret and then
+# reverted on disk. Check what git is actually about to commit.
+if git -C "$RICE_DIR" rev-parse --git-dir >/dev/null 2>&1; then
+  while IFS= read -r sf; do
+    [ -n "$sf" ] || continue
+    case "$sf" in scripts/check-secrets.sh|.gitignore|secrets/*) continue ;; esac
+    content="$(git -C "$RICE_DIR" show ":$sf" 2>/dev/null)" || continue
+    for pat in "${PATTERNS[@]}"; do
+      match="$(printf '%s' "$content" | grep -IEn "$pat" 2>/dev/null | head -3)"
+      [ -n "$match" ] && hit "secret pattern in STAGED content" "$sf: $(printf '%s' "$match" | head -1 | cut -c1-120)"
+    done
+  done < <(git -C "$RICE_DIR" diff --cached --name-only --diff-filter=ACMR 2>/dev/null)
+fi
+
+# ── 5. Loose reminders ───────────────────────────────────────────────────────
 if [ -d "$RICE_DIR/.git" ]; then
   # Probe with real file paths: '.aws/' is a directory-only pattern, so a bare
   # '.aws' never matches and would report a false gap.
