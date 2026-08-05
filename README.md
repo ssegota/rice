@@ -89,8 +89,9 @@ rice/
 
 ## Keybinds
 
-`$mod` = **Super**. Focus/move keys are `j k l č` — the fourth is `č` because of
-the Croatian layout; on a US layout that key is `;`.
+`$mod` = **Super**. Focus/move is vim-standard `h j k l` 🆕 (it used to be
+i3's shifted `j k l č` — the `č` sat where `;` is on a US layout). Horizontal
+split moved to `Super+b` ("beside") to free up the `h`.
 
 | | |
 |---|---|
@@ -105,7 +106,7 @@ the Croatian layout; on a US layout that key is `;`.
 | `Print` | flameshot |
 | `Super+Shift+q` | kill window |
 | `Super+f` | fullscreen |
-| `Super+h` / `Super+v` | split horizontal / vertical |
+| 🆕 `Super+b` / `Super+v` | split horizontal / vertical (was `h`/`v`) |
 | `Super+s` / `Super+w` / `Super+e` | stacking / tabbed / toggle split |
 | `Super+Shift+space` | floating toggle |
 | `Super+r` | resize mode |
@@ -238,6 +239,8 @@ machine.
   starts it automatically once `sudo apt install gammastep` has been run.
 - `workspace_auto_back_and_forth` — tapping the current workspace's number
   bounces back to the previous one.
+- **Focus/move keys are now vim-standard `h j k l`** (also in resize mode);
+  horizontal split relocated to `Super+b`. The `č` key is retired.
 
 ## Not captured
 

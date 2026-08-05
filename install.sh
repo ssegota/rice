@@ -367,7 +367,7 @@ ${B}Done.${R} What's left, in order:
     Print         flameshot        Super+r        resize mode
     Super+c       clipboard hist   Super+n        notification history
     Super+Shift+w wallpaper picker
-    Focus/move:   j / k / l / č    (yes, č — Croatian layout)
+    Focus/move:   h / j / k / l    (vim-standard; split-h moved to Super+b)
 
   Backups of anything replaced: ${DIM}${BACKUP_DIR}${R}
 ${BLU}${B}────────────────────────────────────────────────────────────${R}
