@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# rofi-keybinds — searchable cheat sheet of every i3 keybind (Super+F1)
+#
+# Parses bindsym lines straight out of ~/.config/i3/config, so it can never
+# go stale. Binds inside mode blocks (e.g. resize) are skipped — they only
+# work inside their mode anyway.
+#
+# Enter on a row EXECUTES it: the text after the key is a valid i3 command
+# ("exec ghostty", "workspace number 3", …), so it's fed to i3-msg.
+# Escape just closes.
+set -euo pipefail
+
+CONFIG="$HOME/.config/i3/config"
+
+list="$(awk '
+  /{/ { depth++ }
+  /}/ { if (depth > 0) depth-- }
+  depth == 0 && $1 == "bindsym" {
+    key = $2
+    cmd = ""
+    for (i = 3; i <= NF; i++) cmd = cmd $i " "
+    sub(/ $/, "", cmd)
+    gsub(/--no-startup-id */, "", cmd)
+    # prettify the key column only — the command must stay executable
+    gsub(/\$mod/, "Super", key)
+    gsub(/ccaron/, "č", key)
+    printf "%-32s %s\n", key, cmd
+  }
+' "$CONFIG")"
+
+# expand config variables ($ws1 …) the way i3 would — i3-msg doesn't know
+# them, and "workspace number 1" reads better than "$ws1" anyway.
+# Longest names first so e.g. $ws10 isn't half-eaten by $ws1.
+while IFS= read -r line; do
+  read -r _ name value <<< "$line"
+  value="${value%\"}"; value="${value#\"}"
+  list="${list//"$name"/$value}"
+done < <(grep -E '^\s*set \$' "$CONFIG" | awk '{print length($2), $0}' | sort -rn | cut -d' ' -f2-)
+
+choice="$(rofi -dmenu -i -p "i3 keys" <<< "$list")" || exit 0
+[ -n "$choice" ] || exit 0
+
+# strip the key column (keys never contain spaces), run the rest as an i3 command
+cmd="$(sed 's/^[^ ]\+ \+//' <<< "$choice")"
+exec i3-msg -q -- "$cmd"

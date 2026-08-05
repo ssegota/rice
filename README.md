@@ -94,6 +94,7 @@ the Croatian layout; on a US layout that key is `;`.
 
 | | |
 |---|---|
+| 🆕 `Super+F1` | **this table, live** — searchable rofi cheat sheet parsed from the i3 config; Enter runs the selected bind |
 | `Super+Return` | ghostty |
 | `Super+Shift+Return` | warp-terminal |
 | `F12` | guake dropdown |
@@ -220,6 +221,9 @@ machine.
 - **dunst is themed** (`config/dunst/dunstrc`) — Tokyo Night, rounded,
   Papirus icons. `Super+n` re-shows the last notification,
   `Super+Shift+n` clears all.
+- **`rofi-keybinds`** (`Super+F1`) — searchable keybind cheat sheet, parsed
+  live from the i3 config so it can't go stale; Enter executes the selected
+  bind via i3-msg.
 - **`rofi-wallpaper`** (`Super+Shift+w`) — thumbnail picker over
   `~/Pictures/wallpapers`; persists via `~/.fehbg`. Picking one image sets it
   on all monitors — for per-monitor wallpapers edit `~/.fehbg` by hand.

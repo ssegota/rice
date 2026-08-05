@@ -359,7 +359,7 @@ ${B}Done.${R} What's left, in order:
   6. ${B}Secrets are deliberately not in this bundle.${R} See ${B}secrets/README.md${R}
      — the short version is: ${DIM}gh auth login${R} and re-issue AWS keys.
 
-  Keybinds, in case months have passed: ${B}\$mod = Super${R}
+  Keybinds, in case months have passed: ${B}Super+F1 shows them all${R}
     Super+Return  ghostty          Super+d        rofi
     Super+Shift+Return  warp       Super+Tab      window switcher
     Super+Shift+q kill window      Super+Shift+e  power menu
