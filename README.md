@@ -234,9 +234,6 @@ machine.
   Save one per dock (`autorandr --save officedock`), then the hardcoded
   xrandr lines in the i3 config can go. Installed as a uv tool for now;
   `sudo apt install autorandr` adds hotplug udev rules.
-- **gammastep** (night light) — config is in place
-  (`config/gammastep/config.ini`, location set to Zagreb — adjust); i3
-  starts it automatically once `sudo apt install gammastep` has been run.
 - `workspace_auto_back_and_forth` — tapping the current workspace's number
   bounces back to the previous one.
 - **Focus/move keys are now vim-standard `h j k l`** (also in resize mode);

@@ -276,9 +276,6 @@ exec --no-startup-id ~/.config/i3/scripts/battery-alert.sh
 # Clipboard history daemon — browse with Super+c (rofi front-end)
 exec --no-startup-id sh -c 'command -v greenclip >/dev/null && greenclip daemon'
 
-# Night light — no-op until gammastep is installed (config: ~/.config/gammastep)
-exec --no-startup-id sh -c 'command -v gammastep >/dev/null && gammastep'
-
 # Alternate split direction automatically (spiral layouts instead of slivers)
 exec_always --no-startup-id sh -c 'pkill -f "[a]utotiling"; command -v autotiling >/dev/null && exec autotiling'
 

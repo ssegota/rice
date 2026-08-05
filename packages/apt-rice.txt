@@ -24,7 +24,6 @@ brightnessctl
 playerctl
 autorandr
 autotiling
-gammastep
 pavucontrol
 pulseaudio-utils
 libinput-tools
