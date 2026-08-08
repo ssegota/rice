@@ -1,0 +1,88 @@
+# Theme: gundam-panel
+# Gundam RX-78-2 "Federation Armor" — variant B, ground #d2d4ce.
+# btop is the dashboard's §03 LOAD section: blue box outlines, blue meters that
+# run through V-fin yellow into chest red as things heat up.
+# Structure mirrors /usr/share/btop/themes/tokyo-night.theme.
+
+# Main bg — --armor-lo
+theme[main_bg]="#d2d4ce"
+
+# Main text color — --ink
+theme[main_fg]="#15181f"
+
+# Title color for boxes
+theme[title]="#15181f"
+
+# Highlight color for keyboard shortcuts — chest red, the page's accent for
+# anything actionable. (V-fin yellow is unreadable on this ground.)
+theme[hi_fg]="#c0272d"
+
+# Background color of selected item in processes box — the masthead slab
+theme[selected_bg]="#24408e"
+
+# Foreground color of selected item in processes box
+theme[selected_fg]="#ffffff"
+
+# Color of inactive/disabled text — --ink-dim
+theme[inactive_fg]="#767a74"
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#1a6b7d"
+
+# Cpu box outline color — Federation blue, as every section rule on the page
+theme[cpu_box]="#24408e"
+
+# Memory/disks box outline color
+theme[mem_box]="#24408e"
+
+# Net up/down box outline color
+theme[net_box]="#24408e"
+
+# Processes box outline color
+theme[proc_box]="#24408e"
+
+# Box divider line and small boxes line color — --line
+theme[div_line]="#b0b3ac"
+
+# Meters run blue → yellow → red, matching the page's .cells / .warn / .crit
+# gauge states. Yellow is a fill here, sitting on armour, so the real V-fin
+# #f0b929 is safe to use.
+# Temperature graph colors
+theme[temp_start]="#24408e"
+theme[temp_mid]="#f0b929"
+theme[temp_end]="#c0272d"
+
+# CPU graph colors
+theme[cpu_start]="#24408e"
+theme[cpu_mid]="#f0b929"
+theme[cpu_end]="#c0272d"
+
+# Mem/Disk free meter
+theme[free_start]="#24408e"
+theme[free_mid]="#f0b929"
+theme[free_end]="#c0272d"
+
+# Mem/Disk cached meter
+theme[cached_start]="#24408e"
+theme[cached_mid]="#f0b929"
+theme[cached_end]="#c0272d"
+
+# Mem/Disk available meter
+theme[available_start]="#24408e"
+theme[available_mid]="#f0b929"
+theme[available_end]="#c0272d"
+
+# Mem/Disk used meter
+theme[used_start]="#24408e"
+theme[used_mid]="#f0b929"
+theme[used_end]="#c0272d"
+
+# Download graph colors — camera-eye green through to red
+theme[download_start]="#3f9e56"
+theme[download_mid]="#f0b929"
+theme[download_end]="#c0272d"
+
+# Upload graph colors
+theme[upload_start]="#3f9e56"
+theme[upload_mid]="#f0b929"
+theme[upload_end]="#c0272d"

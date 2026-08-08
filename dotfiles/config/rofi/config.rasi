@@ -9,4 +9,4 @@ configuration {
     sidebar-mode: false;
 }
 
-@theme "~/.config/rofi/themes/mytheme.rasi"
+@theme "~/.config/rofi/themes/gundam.rasi"

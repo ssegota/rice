@@ -1,0 +1,176 @@
+/* Gundam RX-78-2 "Federation Armor" — rofi
+ *
+ * Modelled on the homelab dashboard's PIN gate: a Federation-blue header slab
+ * with a chamfered top-right corner, a hazard stripe beneath it, then an
+ * armour-white body of bordered rows. Selection is the blue slab inverted.
+ *
+ * Square corners throughout — the page has no border-radius anywhere.
+ * Palette: ~/.config/gundam/palette.md
+ */
+
+* {
+    font:   "JetBrainsMono Nerd Font 12";
+
+    armor:      #e6e7e2ff;
+    armor-hi:   #f8f9f6ff;
+    armor-lo:   #d2d4ceff;
+    line:       #b0b3acff;
+    ink:        #15181fff;
+    ink-dim:    #545a66ff;
+    blue:       #24408eff;
+    red:        #c0272dff;
+    yellow:     #f0b929ff;
+    eye:        #3f9e56ff;
+
+    background-color:   transparent;
+    text-color:         @ink;
+
+    margin:     0;
+    padding:    0;
+    spacing:    0;
+}
+
+window {
+    background-color:   @armor;
+    border:             1px;
+    border-color:       @line;
+    border-radius:      0;
+
+    location:       center;
+    width:          640;
+    /* The page's .masthead is a blue slab; rofi can't clip a chamfer, so the
+       top-right cut is implied by the yellow hazard rule under the input. */
+    children:       [ mainbox ];
+}
+
+mainbox {
+    children:   [ inputbar, message, listview ];
+}
+
+/* ── input: the blue "gate-head" slab ─────────────────────────────────── */
+
+inputbar {
+    font:               "JetBrainsMono Nerd Font 16";
+    background-color:   @blue;
+    text-color:         #ffffffff;
+    padding:            14px 16px;
+    spacing:            12px;
+    children:           [ icon-search, entry, case-indicator ];
+}
+
+icon-search {
+    expand:     false;
+    filename:   "search";
+    size:       26px;
+}
+
+icon-search, entry, element-icon, element-text {
+    vertical-align: 0.5;
+}
+
+entry {
+    font:               inherit;
+    text-color:         #ffffffff;
+    cursor-color:       @yellow;
+
+    placeholder:        "SEARCH";
+    placeholder-color:  #ffffffb0;
+}
+
+case-indicator {
+    text-color: @yellow;
+}
+
+/* ── hazard stripe: rofi has no gradients, so a 3px V-fin rule stands in ── */
+
+/* rofi's border-color takes a single colour for all four sides — a per-side
+   list is a parse error, not a fallback. So the stripe is a top border only. */
+message {
+    border:             3px 0 0 0;
+    border-color:       @yellow;
+    background-color:   @armor-hi;
+    text-color:         @ink-dim;
+}
+
+textbox {
+    padding:        10px 16px;
+    text-color:     @ink-dim;
+}
+
+/* ── results: the page's .svc rows ────────────────────────────────────── */
+
+listview {
+    lines:          10;
+    columns:        1;
+
+    fixed-height:   false;
+    border:         3px 0 0 0;
+    border-color:   @yellow;
+    background-color: @armor;
+    scrollbar:      true;
+    padding:        4px 0 4px 0;
+}
+
+scrollbar {
+    width:              4px;
+    handle-width:       4px;
+    handle-color:       @blue;
+    background-color:   @armor-lo;
+}
+
+/* Each row wears a 4px left rule, exactly like .svc on the dashboard —
+   blue at rest, red under the cursor. */
+element {
+    padding:            9px 16px;
+    spacing:            14px;
+    background-color:   transparent;
+    text-color:         @ink;
+    border:             0 0 0 4px;
+    border-color:       transparent;
+}
+
+element normal normal {
+    background-color:   @armor;
+}
+
+element alternate normal {
+    background-color:   @armor-hi;
+}
+
+element normal active,
+element alternate active {
+    text-color:     @blue;
+}
+
+element normal urgent,
+element alternate urgent {
+    text-color:     @red;
+}
+
+element selected {
+    background-color:   @blue;
+    text-color:         #ffffffff;
+    border-color:       @red;
+}
+
+element selected active {
+    background-color:   @blue;
+    text-color:         @yellow;
+}
+
+element selected urgent {
+    background-color:   @red;
+    text-color:         #ffffffff;
+    border-color:       @ink;
+}
+
+element-icon {
+    size:               1.1em;
+    background-color:   transparent;
+}
+
+element-text {
+    text-color:         inherit;
+    background-color:   transparent;
+    highlight:          bold #c0272dff;
+}

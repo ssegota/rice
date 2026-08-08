@@ -1,5 +1,5 @@
 # ~/.config/ghostty/config
-# Tokyo Night — tuned to match the framed Starship prompt.
+# Gundam RX-78-2 (accents on dark) — tuned to match the framed Starship prompt.
 # Reload after editing:  Linux  ctrl+shift+,   macOS  cmd+shift+,
 
 # ── Font ─────────────────────────────────────────────────────────────────────
@@ -16,38 +16,20 @@ font-thicken = true
 font-feature = calt
 font-feature = liga
 
-# ── Colors: Tokyo Night (self-contained, matches the prompt palette) ─────────
-# Prefer Ghostty's bundled theme instead? Comment this whole block and use:
-#   theme = TokyoNight
-# (run `ghostty +list-themes | grep -i tokyo` to see the exact names)
-background = #1a1b26
-foreground = #c0caf5
-cursor-color = #c0caf5
-cursor-text = #1a1b26
-selection-background = #283457
-selection-foreground = #c0caf5
-
-# Normal
-palette = 0=#15161e
-palette = 1=#f7768e
-palette = 2=#9ece6a
-palette = 3=#e0af68
-palette = 4=#7aa2f7
-palette = 5=#bb9af7
-palette = 6=#7dcfff
-palette = 7=#a9b1d6
-# Bright
-palette = 8=#414868
-palette = 9=#f7768e
-palette = 10=#9ece6a
-palette = 11=#e0af68
-palette = 12=#7aa2f7
-palette = 13=#bb9af7
-palette = 14=#7dcfff
-palette = 15=#c0caf5
+# ── Colors: Gundam RX-78-2 "Federation Armor" ────────────────────────────────
+# Colours live in themes/, not here, so the variant can be swapped without
+# touching this file. gundam-active.conf is a symlink; point it somewhere else
+# with `gundam-theme armor|panel|cockpit`, then reload ghostty.
+#
+#   armor    #e6e7e2  the dashboard's own ground — brightest
+#   panel    #d2d4ce  recessed grey — same palette, less glare
+#   cockpit  #12141a  the previous dark theme, for night work
+#
+# background-opacity lives in the theme files too: the light variants want a
+# higher value than the dark one did.
+config-file = /home/sbs/.config/ghostty/themes/gundam-active.conf
 
 # ── Window & background ──────────────────────────────────────────────────────
-background-opacity = 0.95
 # Blur is honored on macOS and KDE; ignored elsewhere (harmless).
 background-blur-radius = 20
 

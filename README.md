@@ -4,21 +4,23 @@ Everything needed to rebuild this desktop on a fresh Ubuntu box — and, since
 it's been months, a written record of what the setup actually *is*.
 
 Captured **2026-08-05** from Ubuntu 26.04 LTS (`resolute`), kernel 7.0.0-28,
-X11 + i3 + LightDM, Croatian keyboard layout.
+X11 + i3 + LightDM, Croatian keyboard layout. Rethemed **2026-08-08** from
+Tokyo Night to Gundam RX-78-2 — see [Theme](#theme--gundam-rx-78-2-federation-armor).
 
 ```
 ┌─ the look ──────────────────────────────────────────────────────────────┐
 │  WM          i3 (gaps: 10 inner / 5 outer, smart_gaps, 3px borders)     │
 │  Bar         polybar — main bar autohides, secondary bars per monitor   │
 │  Compositor  picom                                                      │
-│  Launcher    rofi + custom theme, plus a rofi power menu                │
-│  Prompt      starship — Tokyo Night, framed ╭─ … ╰─❯ bubble layout      │
+│  Launcher    rofi — Gundam theme, plus a rofi power menu                │
+│  Prompt      starship — Gundam palette, framed ╭─ … ╰─❯ bubble layout   │
 │  Terminals   ghostty (primary) · warp · guake (F12) · kitty · terminator│
 │  Font        JetBrainsMono Nerd Font, everywhere                        │
-│  Theme       Adwaita-dark + Adwaita icons (via nwg-look / lxappearance) │
+│  Colours     Gundam RX-78-2 "Federation Armor" — see Theme, below       │
+│  GTK         Adwaita-dark + Adwaita icons (via nwg-look / lxappearance) │
 │  Wallpaper   feh, set from ~/.fehbg at i3 startup                       │
 │  Lock        i3lock-fancy — Super+Escape, rofi power menu, and xss-lock │
-│  Notifs      dunst — Tokyo Night theme; Super+n pops history              │
+│  Notifs      dunst — Gundam theme; Super+n pops history                 │
 │  Gestures    libinput-gestures — 3-finger swipe = workspace nav         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -69,7 +71,8 @@ rice/
 ├── dotfiles/
 │   ├── home/                   → $HOME          .bashrc .profile .vimrc .gitconfig …
 │   ├── config/                 → ~/.config      i3 polybar picom rofi ghostty starship …
-│   └── local-bin/              → ~/.local/bin   rofi-power rofi-wallpaper
+│   │   └── gundam/palette.md   the eleven colours every config draws from
+│   └── local-bin/              → ~/.local/bin   rofi-power rofi-wallpaper gundam-theme
 ├── wallpapers/                 32 images (~56 MB) → ~/Pictures/wallpapers
 ├── fonts/install-fonts.sh      JetBrainsMono Nerd Font
 ├── packages/
@@ -140,6 +143,82 @@ split moved to `Super+b` ("beside") to free up the `h`.
 - `shopt` — `autocd`, `cdspell`, `dirspell`, `globstar`
 - `cp`/`mv`/`mkdir` aliased to interactive+verbose
 - `EDITOR=code`, conda init block, `~/.local/bin` and `~/.fly/bin` on `PATH`
+
+## Theme — Gundam RX-78-2 "Federation Armor"
+
+Added **2026-08-08**, replacing Tokyo Night everywhere. The palette is lifted
+from the homelab dashboard's `:root` block (http://192.168.1.118/), so the
+desktop and the dashboard read as one machine. Eleven colours, and nothing
+outside them:
+
+| Token | Hex | Role |
+|---|---|---|
+| `armor` | `#e6e7e2` | body background — the white armour panel |
+| `armor-hi` | `#f8f9f6` | raised panel (cards, list rows) |
+| `armor-lo` | `#d2d4ce` | recessed surface (meter tracks, inset fields) |
+| `line` | `#b0b3ac` | panel seams / borders |
+| `ink` | `#15181f` | primary text |
+| `ink-dim` | `#545a66` | secondary text |
+| `blue` | `#24408e` | Federation blue — focus, primary chrome |
+| `blue-deep` | `#1a2f6b` | pressed / deeper blue |
+| `red` | `#c0272d` | chest red — urgent, destructive, active accent |
+| `yellow` | `#f0b929` | V-fin yellow — hazard stripes, warning fills |
+| `eye` | `#3f9e56` | camera-eye green — "nominal" |
+
+Rules carried over from the page: **no border radius** (square, or chamfered
+top-right), hazard stripes at -45° between a header and its body, uppercase
+letterspaced labels with tabular-mono values, and a 4px colour-coded left
+border to state a row's status. **Yellow is a fill, never text** — `#f0b929`
+is ~1.6:1 on armour white, so anywhere yellow *text* is needed the configs use
+`#7d5a00` instead. Full rationale: [`dotfiles/config/gundam/palette.md`](dotfiles/config/gundam/palette.md).
+
+### Chrome vs. terminals
+
+The split is deliberate — the chrome is the outside of the machine and stays
+armour white in every variant; only the terminals switch.
+
+```
+chrome (always armour white)      terminals (three variants, pick one)
+├── polybar/config.ini            ├── ghostty/themes/gundam-{armor,panel,cockpit}.conf
+├── rofi/themes/gundam.rasi       ├── kitty/themes/gundam-{armor,panel,cockpit}.conf
+├── dunst/dunstrc                 ├── btop/themes/gundam-{armor,panel,rx78}.theme
+└── i3/config  (client.* block)   └── starship.toml  (palette = …)
+```
+
+### Switching variants
+
+```bash
+gundam-theme            # print the active variant
+gundam-theme armor      # light, ground #e6e7e2 — the dashboard's own colours
+gundam-theme panel      # light, ground #d2d4ce — same hues, greyer, less glare
+gundam-theme cockpit    # the previous dark theme, for night work
+```
+
+| Variant | Ground | Opacity | For |
+|---|---|---|---|
+| `armor` | `#e6e7e2` | 0.97 | daylight; matches the dashboard exactly |
+| `panel` | `#d2d4ce` | **0.90** | dim rooms — recessed grey, and the most see-through |
+| `cockpit` | `#12141a` | 0.95 | night work |
+
+The ANSI palette is byte-identical across `armor` and `panel` — every colour
+was picked to stay legible on both grounds, so switching changes only the
+ground and the opacity.
+
+`gundam-theme` repoints the `gundam-active.conf` symlink that ghostty and kitty
+both include, rewrites btop's `color_theme` line, and flips starship's
+`palette =`. Reloads are not all free:
+
+- **ghostty** — `ctrl+shift+,` (no IPC reload), or just open a new window
+- **kitty** — `ctrl+shift+f5`; the script also tries `kitty @ load-config`
+- **btop** — reads its theme once at startup, so restart it
+- **starship** — next prompt, or `exec bash`
+
+Changing polybar/rofi/dunst/i3 colours means editing those files directly;
+they're single-variant by design.
+
+> The pre-gundam (all-dark) configs were saved to
+> `~/gundam-dark-backup-2026-08-08/` on the live machine. That directory is
+> **not** in this bundle — the pre-gundam state is in git history instead.
 
 ## Repairs made 2026-08-05
 

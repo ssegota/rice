@@ -1,0 +1,82 @@
+# Theme: gundam-rx78
+# Gundam RX-78-2 accents on dark — matches ghostty/kitty/starship/polybar/rofi/i3.
+# Structure mirrors /usr/share/btop/themes/tokyo-night.theme.
+
+# Main bg
+theme[main_bg]="#12141a"
+
+# Main text color
+theme[main_fg]="#e8eaf2"
+
+# Title color for boxes
+theme[title]="#e8eaf2"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#f6c14e"
+
+# Background color of selected item in processes box
+theme[selected_bg]="#3a4356"
+
+# Foreground color of selected item in processes box
+theme[selected_fg]="#e8eaf2"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#6a7387"
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#6fd3e8"
+
+# Cpu box outline color
+theme[cpu_box]="#5b83d6"
+
+# Memory/disks box outline color
+theme[mem_box]="#5b83d6"
+
+# Net up/down box outline color
+theme[net_box]="#5b83d6"
+
+# Processes box outline color
+theme[proc_box]="#5b83d6"
+
+# Box divider line and small boxes line color
+theme[div_line]="#3a4356"
+
+# Temperature graph colors
+theme[temp_start]="#7fc76c"
+theme[temp_mid]="#f6c14e"
+theme[temp_end]="#e63946"
+
+# CPU graph colors
+theme[cpu_start]="#7fc76c"
+theme[cpu_mid]="#f6c14e"
+theme[cpu_end]="#e63946"
+
+# Mem/Disk free meter
+theme[free_start]="#7fc76c"
+theme[free_mid]="#f6c14e"
+theme[free_end]="#e63946"
+
+# Mem/Disk cached meter
+theme[cached_start]="#7fc76c"
+theme[cached_mid]="#f6c14e"
+theme[cached_end]="#e63946"
+
+# Mem/Disk available meter
+theme[available_start]="#7fc76c"
+theme[available_mid]="#f6c14e"
+theme[available_end]="#e63946"
+
+# Mem/Disk used meter
+theme[used_start]="#7fc76c"
+theme[used_mid]="#f6c14e"
+theme[used_end]="#e63946"
+
+# Download graph colors
+theme[download_start]="#7fc76c"
+theme[download_mid]="#f6c14e"
+theme[download_end]="#e63946"
+
+# Upload graph colors
+theme[upload_start]="#7fc76c"
+theme[upload_mid]="#f6c14e"
+theme[upload_end]="#e63946"

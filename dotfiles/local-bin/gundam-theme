@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# gundam-theme — switch the terminal half of the rice between variants.
+#
+#   gundam-theme armor     light, ground #e6e7e2 — the dashboard's own colours
+#   gundam-theme panel     light, ground #d2d4ce — same hues, greyer, less glare
+#   gundam-theme cockpit   the previous dark theme, for night work
+#   gundam-theme           print which variant is active
+#
+# Touches ghostty, kitty, btop and starship together. The chrome — polybar,
+# rofi, dunst, i3 borders — stays armour white in every variant by design; it
+# is the outside of the machine, not the inside.
+#
+# Palette and rationale: ~/.config/gundam/palette.md
+
+set -euo pipefail
+
+CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
+GHOSTTY_DIR="$CFG/ghostty/themes"
+KITTY_DIR="$CFG/kitty/themes"
+BTOP_THEMES="$CFG/btop/themes"
+BTOP_CONF="$CFG/btop/btop.conf"
+STARSHIP="$CFG/starship.toml"
+
+die() { printf '%s\n' "$*" >&2; exit 1; }
+
+current() {
+  local link
+  link=$(readlink "$GHOSTTY_DIR/gundam-active.conf" 2>/dev/null) || {
+    echo "unknown"; return
+  }
+  link=${link##*/}; link=${link#gundam-}; link=${link%.conf}
+  echo "$link"
+}
+
+# btop reads its theme once at startup, so a running instance keeps the old
+# colours until it is restarted. Everything else can be reloaded live.
+apply() {
+  local v=$1
+
+  [ -f "$GHOSTTY_DIR/gundam-$v.conf" ] || die "no ghostty theme for '$v'"
+  [ -f "$KITTY_DIR/gundam-$v.conf" ]   || die "no kitty theme for '$v'"
+  [ -f "$BTOP_THEMES/gundam-$v.theme" ] || die "no btop theme for '$v'"
+
+  ln -sfn "gundam-$v.conf" "$GHOSTTY_DIR/gundam-active.conf"
+  ln -sfn "gundam-$v.conf" "$KITTY_DIR/gundam-active.conf"
+
+  # btop: rewrite the one color_theme line in place.
+  if [ -f "$BTOP_CONF" ]; then
+    sed -i "s|^color_theme = .*|color_theme = \"$BTOP_THEMES/gundam-$v.theme\"|" "$BTOP_CONF"
+  fi
+
+  # starship: flip the single `palette =` line at the top of the file. The
+  # dark variant kept its original name, so map it rather than assuming.
+  local pal
+  case "$v" in
+    armor)   pal=gundam_armor ;;
+    panel)   pal=gundam_panel ;;
+    cockpit) pal=gundam_rx78 ;;
+  esac
+  sed -i "0,/^palette = /s|^palette = .*|palette = \"$pal\"|" "$STARSHIP"
+
+  # Live reload where it is free. Ghostty has no reload-over-IPC, so open
+  # terminals need ctrl+shift+, (macOS: cmd+shift+,) — or just a new window.
+  if command -v kitty >/dev/null 2>&1; then
+    kitty @ --to "${KITTY_LISTEN_ON:-unix:/tmp/kitty}" load-config >/dev/null 2>&1 || true
+  fi
+
+  printf 'Variant: %s\n' "$v"
+  printf '  ghostty   reload with ctrl+shift+, (or open a new window)\n'
+  printf '  kitty     reload with ctrl+shift+f5\n'
+  printf '  btop      restart it\n'
+  printf '  starship  next prompt, or: exec bash\n'
+}
+
+case "${1:-}" in
+  armor|panel|cockpit) apply "$1" ;;
+  ""|status)
+    printf 'Variant: %s\n' "$(current)"
+    printf 'Switch:  gundam-theme armor | panel | cockpit\n'
+    ;;
+  -h|--help|help)
+    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  *) die "unknown variant '$1' — expected armor, panel or cockpit" ;;
+esac

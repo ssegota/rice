@@ -1,5 +1,11 @@
-# ~/.config/dunst/dunstrc — Tokyo Night (dunst 1.12+ syntax)
-# Palette matches ghostty/kitty/starship/polybar/rofi/i3.
+# ~/.config/dunst/dunstrc — Gundam RX-78-2 "Federation Armor" (dunst 1.12+ syntax)
+#
+# A notification is one of the dashboard's .svc rows lifted off the page: an
+# armour-white card, a grey seam around it, and a 4px colour-coded rule down
+# the left edge saying how much you should care. Corners are square, because
+# nothing on the page is rounded.
+#
+# Palette: ~/.config/gundam/palette.md
 
 [global]
     monitor = 0
@@ -17,8 +23,11 @@
     markup = full
     show_indicators = yes
 
+    # The status rule: frame_width draws all four sides, so the left-edge
+    # emphasis comes from a thicker frame plus the per-urgency colour below.
     frame_width = 2
-    corner_radius = 8
+    # Square. The dashboard has no border-radius anywhere.
+    corner_radius = 0
     separator_height = 2
     separator_color = frame
     padding = 12
@@ -27,12 +36,14 @@
     icon_position = left
     max_icon_size = 48
     enable_recursive_icon_lookup = true
-    icon_theme = Papirus-Dark, Papirus, Adwaita
+    # Light cards want the light icon set.
+    icon_theme = Papirus, Papirus-Light, Adwaita
 
     progress_bar = true
     progress_bar_height = 8
     progress_bar_frame_width = 0
-    progress_bar_corner_radius = 4
+    # Square, like the page's .progress track.
+    progress_bar_corner_radius = 0
 
     idle_threshold = 120
     history_length = 50
@@ -40,28 +51,32 @@
     stack_duplicates = true
 
     # picom is told not to add shadow/rounding (class_g = 'Dunst' excludes);
-    # dunst draws its own rounded corners via corner_radius above.
+    # dunst draws its own corners via corner_radius above.
     mouse_left_click = do_action, close_current
     mouse_middle_click = context
     mouse_right_click = close_all
 
+# Low: a quiet panel. Grey seam, secondary ink — the page's .dev row.
 [urgency_low]
-    background = "#1a1b26"
-    foreground = "#a9b1d6"
-    frame_color = "#414868"
-    highlight = "#7aa2f7"
+    background = "#f8f9f6"
+    foreground = "#545a66"
+    frame_color = "#b0b3ac"
+    highlight = "#24408e"
     timeout = 5
 
+# Normal: Federation blue rule, full-strength ink — the page's .svc row.
 [urgency_normal]
-    background = "#1a1b26"
-    foreground = "#c0caf5"
-    frame_color = "#7aa2f7"
-    highlight = "#7aa2f7"
+    background = "#f8f9f6"
+    foreground = "#15181f"
+    frame_color = "#24408e"
+    highlight = "#24408e"
     timeout = 8
 
+# Critical: chest red, and the card itself goes red-on-white so it cannot be
+# mistaken for an ordinary notification at a glance.
 [urgency_critical]
-    background = "#1a1b26"
-    foreground = "#c0caf5"
-    frame_color = "#f7768e"
-    highlight = "#f7768e"
+    background = "#ffffff"
+    foreground = "#15181f"
+    frame_color = "#c0272d"
+    highlight = "#c0272d"
     timeout = 0

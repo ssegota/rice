@@ -1,14 +1,23 @@
 # ~/.config/starship.toml
-# Tokyo Night — framed bubble prompt for Python (conda/uv), Node & LaTeX on AWS.
+# Gundam RX-78-2 — framed bubble prompt for Python (conda/uv), Node & LaTeX on AWS.
 # Requires a Nerd Font (https://www.nerdfonts.com).
 #
 # IMPORTANT: `palette` must stay at the TOP, before any [table]. If it sits
 # after [palettes.*] it gets nested inside that table and no colors apply.
+#
+# All palettes are defined at the bottom. Flip this one line to switch —
+# `gundam-theme armor|panel|cockpit` does it for you, along with ghostty,
+# kitty and btop:
+#
+#   gundam_armor   light, ground #e6e7e2 — the homelab dashboard's own colours
+#   gundam_panel   light, ground #d2d4ce — same hues, greyer, less glare
+#   gundam_rx78    dark cockpit (the previous theme)
+#   tokyo_night    dark, kept from before that
 
-palette = "tokyo_night"
+palette = "gundam_panel"
 
 format = """
-[╭](fg:iris)[─](fg:overlay)\
+[╭](fg:frame)[─](fg:overlay)\
 $os\
 $directory\
 $git_branch\
@@ -31,7 +40,10 @@ add_newline = true
 # ── Core: OS + directory (powerline head) ──────────────────────────────────
 [os]
 disabled = false
-format = "[](fg:iris)[ $symbol ](bg:iris fg:ink)[](fg:iris bg:blue)"
+# `chip`, not `ink`: this bubble's ground is V-fin yellow, which needs dark text
+# on it in every palette. `ink` is whatever contrasts with the *saturated*
+# bubbles (white on the light palettes, near-black on the dark ones).
+format = "[](fg:iris)[ $symbol ](bg:iris fg:chip)[](fg:iris bg:blue)"
 
 [os.symbols]
 Ubuntu = "󰕈"
@@ -129,7 +141,8 @@ symbol = " "
 # Shows the full region name, e.g. @eu-north-1. To shorten specific regions,
 # add an [aws.region_aliases] table below (e.g. eu-north-1 = "sto").
 format = "[](fg:orange)[ $symbol($profile)(@$region) ]($style)[](fg:orange)"
-style = "bg:orange fg:ink"
+# `chip` for the same reason as [os] — orange is a warm, light ground.
+style = "bg:orange fg:chip"
 expiration_symbol = "⏰"
 
 [cmd_duration]
@@ -149,10 +162,87 @@ success_symbol = "[ ❯](bold green)"
 error_symbol = "[ ❯](bold red)"
 vimcmd_symbol = "[ ❮](bold iris)"
 
-# ── Tokyo Night palette ──────────────────────────────────────────────────────
+# ═══ Light variants — "Federation Armor", from the homelab dashboard ═════════
+#
+# Three tokens carry the light/dark difference; everything else is just hues:
+#
+#   ink    text ON a saturated bubble (blue/red/green/magenta grounds).
+#          White here, near-black in the dark palettes.
+#   chip   text ON a warm light bubble (iris/orange). Always near-black.
+#   frame  the ╭ corner of the prompt frame. V-fin yellow vanishes on armour
+#          white, so the light palettes hand the crest to Federation blue.
+#
+# `yellow` is the *text* yellow (#7d5a00, the dashboard's own readable
+# substitute) while `iris` keeps the real V-fin #f0b929 for use as a ground.
+# Greens and oranges are deepened from the page values so white text clears
+# 4.5:1 on them.
+
+# Variant A — ground #e6e7e2, matching ghostty/kitty gundam-armor.
+[palettes.gundam_armor]
+fg = "#15181f"
+ink = "#ffffff"
+chip = "#15181f"
+frame = "#24408e"
+bg = "#e6e7e2"
+surface = "#d2d4ce"
+overlay = "#b0b3ac"
+blue = "#24408e"
+cyan = "#1a6b7d"
+green = "#2c6f3c"
+magenta = "#a4407c"
+iris = "#f0b929"
+red = "#c0272d"
+orange = "#d98324"
+yellow = "#7d5a00"
+teal = "#0f5260"
+
+# Variant B — ground #d2d4ce. Same hues; surface and overlay step one shade
+# darker so the bubbles still separate from the greyer ground.
+[palettes.gundam_panel]
+fg = "#15181f"
+ink = "#ffffff"
+chip = "#15181f"
+frame = "#24408e"
+bg = "#d2d4ce"
+surface = "#b0b3ac"
+overlay = "#8b8e88"
+blue = "#24408e"
+cyan = "#1a6b7d"
+green = "#2c6f3c"
+magenta = "#a4407c"
+iris = "#f0b929"
+red = "#c0272d"
+orange = "#d98324"
+yellow = "#7d5a00"
+teal = "#0f5260"
+
+# ── Gundam RX-78-2 palette (accents on dark) ─────────────────────────────────
+# iris = V-fin yellow: the prompt frame and OS bubble wear the crest.
+# magenta = beam-saber pink, orange = thruster flare.
+[palettes.gundam_rx78]
+fg = "#e8eaf2"
+ink = "#14161c"
+chip = "#14161c"
+frame = "#f6c14e"
+bg = "#12141a"
+surface = "#3a4356"
+overlay = "#6a7387"
+blue = "#5b83d6"
+cyan = "#6fd3e8"
+green = "#7fc76c"
+magenta = "#e07ab8"
+iris = "#f6c14e"
+red = "#e63946"
+orange = "#f08c4a"
+yellow = "#f6c14e"
+teal = "#3bb8c4"
+
+# ── Tokyo Night palette (kept for easy switching) ────────────────────────────
 [palettes.tokyo_night]
 fg = "#c0caf5"
 ink = "#16161e"
+chip = "#16161e"
+frame = "#7aa2f7"
 bg = "#1a1b26"
 surface = "#414868"
 overlay = "#565f89"
