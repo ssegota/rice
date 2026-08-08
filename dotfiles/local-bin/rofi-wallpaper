@@ -1,17 +1,26 @@
 #!/usr/bin/env bash
 # rofi-wallpaper — visual wallpaper picker (Super+Shift+w)
 #
-# Shows every image in ~/Pictures/wallpapers with a thumbnail; Enter sets it
-# on ALL monitors via feh --bg-fill, which also rewrites ~/.fehbg so the
-# choice persists across logins.
-#
-# NOTE: picking one here replaces the two-image (per-monitor) .fehbg setup.
-# To go back to different wallpaper per screen, edit ~/.fehbg by hand and
-# list one image per monitor in xrandr output order.
+# Shows every image in ~/Pictures/wallpapers with a thumbnail.
+#   Enter — set it on the focused monitor only
+#   Alt+1 — set it on all monitors
+# Either way feh rewrites ~/.fehbg with one image per monitor (xrandr
+# output order), so the whole per-monitor setup survives logins.
 set -euo pipefail
 
 WALLDIR="$HOME/Pictures/wallpapers"
 
+# Monitors in xrandr/Xinerama order — the order feh assigns images in.
+mapfile -t monitors < <(xrandr --listmonitors | awk 'NR>1 {print $NF}')
+focused="$(i3-msg -t get_workspaces | jq -r '.[] | select(.focused).output' || true)"
+
+if [ -n "$focused" ]; then
+  mesg="Enter: set on $focused    Alt+1: set on all monitors"
+else
+  mesg="Enter: set on all monitors"
+fi
+
+rc=0
 choice="$(
   find "$WALLDIR" -maxdepth 1 -type f \
        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -printf '%f\n' \
@@ -19,8 +28,48 @@ choice="$(
     | while IFS= read -r f; do
         printf '%s\0icon\x1f%s\n' "$f" "$WALLDIR/$f"
       done \
-    | rofi -dmenu -i -show-icons -p "wallpaper"
-)"
+    | rofi -dmenu -i -show-icons -p "wallpaper" -mesg "$mesg"
+)" || rc=$?
 
 [ -n "$choice" ] || exit 0
-exec feh --bg-fill "$WALLDIR/$choice"
+new="$WALLDIR/$choice"
+
+# Exit 0 = Enter (focused monitor), 10 = Alt+1 (all monitors), else cancelled.
+[ "$rc" -eq 0 ] || [ "$rc" -eq 10 ] || exit 0
+
+target=-1
+for i in "${!monitors[@]}"; do
+  [ "${monitors[$i]}" = "$focused" ] && target=$i
+done
+
+# All monitors — also the fallback when the focused output can't be found.
+if [ "$rc" -eq 10 ] || [ "$target" -lt 0 ]; then
+  exec feh --bg-fill "$new"
+fi
+
+# Current per-monitor images: the tokens of the feh line in ~/.fehbg that are
+# existing files. xargs undoes feh's quoting; the hand-written fresh-install
+# variant of .fehbg uses "$HOME/…", so expand that too.
+current=()
+if [ -r "$HOME/.fehbg" ]; then
+  while IFS= read -r tok; do
+    tok="${tok//\$HOME/$HOME}"
+    [ -f "$tok" ] && current+=("$tok")
+  done < <(grep -m1 -- '--bg-' "$HOME/.fehbg" | xargs printf '%s\n' 2>/dev/null || true)
+fi
+
+# One image per monitor: keep what each screen shows now (feh reuses the last
+# image when the list runs short), then swap the choice in on the focused one.
+imgs=()
+for i in "${!monitors[@]}"; do
+  if [ "$i" -lt "${#current[@]}" ]; then
+    imgs+=("${current[$i]}")
+  elif [ "${#current[@]}" -gt 0 ]; then
+    imgs+=("${current[-1]}")
+  else
+    imgs+=("$new")
+  fi
+done
+imgs[$target]="$new"
+
+exec feh --bg-fill "${imgs[@]}"

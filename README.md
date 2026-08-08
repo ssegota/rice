@@ -226,8 +226,8 @@ machine.
   live from the i3 config so it can't go stale; Enter executes the selected
   bind via i3-msg.
 - **`rofi-wallpaper`** (`Super+Shift+w`) — thumbnail picker over
-  `~/Pictures/wallpapers`; persists via `~/.fehbg`. Picking one image sets it
-  on all monitors — for per-monitor wallpapers edit `~/.fehbg` by hand.
+  `~/Pictures/wallpapers`; persists via `~/.fehbg`. Enter sets the image on
+  the focused monitor only (the rest keep theirs); Alt+1 sets it everywhere.
 - **greenclip** (`Super+c`) — clipboard history, daemon started by i3.
 - **autotiling** — splits alternate h/v automatically by window shape.
 - **autorandr** — current two-monitor layout saved as profile `home`.
