@@ -50,6 +50,7 @@ fzf
 zoxide
 btop
 htop
+fastfetch
 glow
 git
 gh

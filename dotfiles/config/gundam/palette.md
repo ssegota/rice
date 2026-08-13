@@ -36,7 +36,8 @@ Every config in this rice draws from these eleven values and nothing else.
     └── i3/config  (client.* block)  ├── kitty/themes/*.conf
                                      ├── btop/themes/gundam-{armor,panel,cockpit}.theme
                                      ├── starship.toml (palette = ...)
-                                     └── ~/.claude/settings.json (theme = ...)
+                                     ├── ~/.claude/settings.json (theme = ...)
+                                     └── fastfetch (ANSI-only — follows every variant untouched)
 
 Claude Code is in that column because it paints its own TUI rather than using
 the terminal's sixteen colours: left on `dark`, its blue sits at about 1.6:1 on

@@ -21,6 +21,7 @@ Tokyo Night to Gundam RX-78-2 — see [Theme](#theme--gundam-rx-78-2-federation-
 │  Wallpaper   feh, set from ~/.fehbg at i3 startup                       │
 │  Lock        i3lock-fancy — Super+Escape, rofi power menu, and xss-lock │
 │  Notifs      dunst — Gundam theme; Super+n pops history                 │
+│  Fetch       fastfetch — RX-78-2 head logo, follows the active variant  │
 │  Gestures    libinput-gestures — 3-finger swipe = workspace nav         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -219,6 +220,11 @@ its dark-theme blue is ~1.6:1 on armour white). Reloads are not all free:
 
 Changing polybar/rofi/dunst/i3 colours means editing those files directly;
 they're single-variant by design.
+
+**fastfetch** needs no variant files at all: its RX-78-2 head logo
+(`config/fastfetch/rx78-head.txt`, hand-drawn pixel grid) and its labels are
+pure ANSI colours, so they re-dress themselves the moment the terminal theme
+switches. It replaced neofetch (unmaintained since 2021) on 2026-08-13.
 
 > The pre-gundam (all-dark) configs were saved to
 > `~/gundam-dark-backup-2026-08-08/` on the live machine. That directory is
