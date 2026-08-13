@@ -181,8 +181,9 @@ armour white in every variant; only the terminals switch.
 chrome (always armour white)      terminals (three variants, pick one)
 ├── polybar/config.ini            ├── ghostty/themes/gundam-{armor,panel,cockpit}.conf
 ├── rofi/themes/gundam.rasi       ├── kitty/themes/gundam-{armor,panel,cockpit}.conf
-├── dunst/dunstrc                 ├── btop/themes/gundam-{armor,panel,rx78}.theme
-└── i3/config  (client.* block)   └── starship.toml  (palette = …)
+├── dunst/dunstrc                 ├── btop/themes/gundam-{armor,panel,cockpit}.theme
+└── i3/config  (client.* block)   ├── starship.toml  (palette = …)
+                                  └── ~/.claude/settings.json  (theme = …)
 ```
 
 ### Switching variants
@@ -205,13 +206,16 @@ was picked to stay legible on both grounds, so switching changes only the
 ground and the opacity.
 
 `gundam-theme` repoints the `gundam-active.conf` symlink that ghostty and kitty
-both include, rewrites btop's `color_theme` line, and flips starship's
-`palette =`. Reloads are not all free:
+both include, rewrites btop's `color_theme` line, flips starship's
+`palette =`, and sets Claude Code's `theme` in `~/.claude/settings.json`
+(light for armor/panel, dark for cockpit — its TUI paints its own colours, and
+its dark-theme blue is ~1.6:1 on armour white). Reloads are not all free:
 
 - **ghostty** — `ctrl+shift+,` (no IPC reload), or just open a new window
 - **kitty** — `ctrl+shift+f5`; the script also tries `kitty @ load-config`
 - **btop** — reads its theme once at startup, so restart it
 - **starship** — next prompt, or `exec bash`
+- **claude** — live; it watches settings.json
 
 Changing polybar/rofi/dunst/i3 colours means editing those files directly;
 they're single-variant by design.
