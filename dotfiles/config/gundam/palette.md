@@ -29,12 +29,18 @@ Every config in this rice draws from these eleven values and nothing else.
 
 ## Layout
 
-    chrome (always armour white)     terminals (two variants, pick one)
+    chrome (always armour white)     terminals (three variants, pick one)
     ├── polybar/config.ini           ├── ghostty/themes/gundam-armor.conf
     ├── rofi/themes/gundam.rasi      ├── ghostty/themes/gundam-panel.conf
-    ├── dunst/dunstrc                ├── kitty/themes/*.conf
-    └── i3/config  (client.* block)  ├── btop/themes/gundam-{armor,panel}.theme
-                                     └── starship.toml (palette = ...)
+    ├── dunst/dunstrc                ├── ghostty/themes/gundam-cockpit.conf
+    └── i3/config  (client.* block)  ├── kitty/themes/*.conf
+                                     ├── btop/themes/gundam-{armor,panel,cockpit}.theme
+                                     ├── starship.toml (palette = ...)
+                                     └── ~/.claude/settings.json (theme = ...)
+
+Claude Code is in that column because it paints its own TUI rather than using
+the terminal's sixteen colours: left on `dark`, its blue sits at about 1.6:1 on
+armour white. `gundam-theme` flips it to `light` for ARMOR and PANEL.
 
 Switch the terminal variant with `gundam-theme armor|panel|cockpit`.
 `cockpit` is the previous dark theme, kept for night work.

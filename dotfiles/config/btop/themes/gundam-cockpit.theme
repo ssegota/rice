@@ -1,5 +1,7 @@
-# Theme: gundam-rx78
-# Gundam RX-78-2 accents on dark — matches ghostty/kitty/starship/polybar/rofi/i3.
+# Theme: gundam-cockpit
+# Gundam RX-78-2 — variant C: COCKPIT (the previous dark theme).
+# Kept verbatim from the config this rice replaced, so night work has somewhere
+# to go. Accents on near-black rather than armour white.
 # Structure mirrors /usr/share/btop/themes/tokyo-night.theme.
 
 # Main bg

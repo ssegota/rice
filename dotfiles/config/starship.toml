@@ -11,7 +11,7 @@
 #
 #   gundam_armor   light, ground #e6e7e2 — the homelab dashboard's own colours
 #   gundam_panel   light, ground #d2d4ce — same hues, greyer, less glare
-#   gundam_rx78    dark cockpit (the previous theme)
+#   gundam_cockpit dark, ground #12141a — the previous theme, for night work
 #   tokyo_night    dark, kept from before that
 
 palette = "gundam_panel"
@@ -216,10 +216,10 @@ orange = "#d98324"
 yellow = "#7d5a00"
 teal = "#0f5260"
 
-# ── Gundam RX-78-2 palette (accents on dark) ─────────────────────────────────
+# ── Variant C — COCKPIT, accents on dark ─────────────────────────────────────
 # iris = V-fin yellow: the prompt frame and OS bubble wear the crest.
 # magenta = beam-saber pink, orange = thruster flare.
-[palettes.gundam_rx78]
+[palettes.gundam_cockpit]
 fg = "#e8eaf2"
 ink = "#14161c"
 chip = "#14161c"

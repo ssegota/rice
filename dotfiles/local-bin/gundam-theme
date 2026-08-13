@@ -6,9 +6,9 @@
 #   gundam-theme cockpit   the previous dark theme, for night work
 #   gundam-theme           print which variant is active
 #
-# Touches ghostty, kitty, btop and starship together. The chrome — polybar,
-# rofi, dunst, i3 borders — stays armour white in every variant by design; it
-# is the outside of the machine, not the inside.
+# Touches ghostty, kitty, btop, starship and Claude Code together. The chrome —
+# polybar, rofi, dunst, i3 borders — stays armour white in every variant by
+# design; it is the outside of the machine, not the inside.
 #
 # Palette and rationale: ~/.config/gundam/palette.md
 
@@ -20,6 +20,7 @@ KITTY_DIR="$CFG/kitty/themes"
 BTOP_THEMES="$CFG/btop/themes"
 BTOP_CONF="$CFG/btop/btop.conf"
 STARSHIP="$CFG/starship.toml"
+CLAUDE_SETTINGS="$HOME/.claude/settings.json"
 
 die() { printf '%s\n' "$*" >&2; exit 1; }
 
@@ -50,14 +51,24 @@ apply() {
   fi
 
   # starship: flip the single `palette =` line at the top of the file. The
-  # dark variant kept its original name, so map it rather than assuming.
-  local pal
+  # palettes are named after the variants, one for one.
+  sed -i "0,/^palette = /s|^palette = .*|palette = \"gundam_$v\"|" "$STARSHIP"
+
+  # Claude Code paints its own TUI instead of drawing from the ANSI palette, so
+  # its dark blue (file paths, headings) drops to about 1.5:1 on armour white.
+  # Only the light/dark axis matters here — swap for light-ansi/dark-ansi if you
+  # would rather it borrowed the terminal's sixteen colours.
+  local claude_theme=""
   case "$v" in
-    armor)   pal=gundam_armor ;;
-    panel)   pal=gundam_panel ;;
-    cockpit) pal=gundam_rx78 ;;
+    cockpit) claude_theme=dark ;;
+    *)       claude_theme=light ;;
   esac
-  sed -i "0,/^palette = /s|^palette = .*|palette = \"$pal\"|" "$STARSHIP"
+  if [ -f "$CLAUDE_SETTINGS" ] && grep -q '^[[:space:]]*"theme"[[:space:]]*:' "$CLAUDE_SETTINGS"; then
+    sed -i "s|^\([[:space:]]*\)\"theme\"[[:space:]]*:[[:space:]]*\"[^\"]*\"|\1\"theme\": \"$claude_theme\"|" \
+      "$CLAUDE_SETTINGS"
+  else
+    claude_theme=""   # no key to flip; leave the file alone and say nothing
+  fi
 
   # Live reload where it is free. Ghostty has no reload-over-IPC, so open
   # terminals need ctrl+shift+, (macOS: cmd+shift+,) — or just a new window.
@@ -70,6 +81,8 @@ apply() {
   printf '  kitty     reload with ctrl+shift+f5\n'
   printf '  btop      restart it\n'
   printf '  starship  next prompt, or: exec bash\n'
+  [ -n "$claude_theme" ] && printf '  claude    %s — live, settings.json is watched\n' "$claude_theme"
+  return 0
 }
 
 case "${1:-}" in
