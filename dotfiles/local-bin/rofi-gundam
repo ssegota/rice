@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# rofi-gundam — switch the terminal variant without a terminal (Super+t)
+# rofi-gundam — switch the terminal variant without a terminal (Super+Shift+t)
 #
 # Front-end for gundam-theme: lists armor / panel / cockpit with the active
 # variant marked and preselected, applies the choice, then pops a dunst

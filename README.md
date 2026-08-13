@@ -121,7 +121,7 @@ split moved to `Super+b` ("beside") to free up the `h`.
 | 3-finger swipe L/R | previous / next workspace |
 | 3-finger swipe up | last workspace (`back_and_forth`) |
 | 🆕 `Super+Shift+w` | wallpaper picker (rofi, with thumbnails) |
-| 🆕 `Super+t` | theme variant switcher (rofi front-end for `gundam-theme`) |
+| 🆕 `Super+Shift+t` | theme variant switcher (rofi front-end for `gundam-theme`) |
 | 🆕 `Super+c` | clipboard history (greenclip → rofi) |
 | 🆕 `Super+n` / `Super+Shift+n` | notification history / close all (dunst) |
 | 🆕 `Super+<current ws number>` | jumps back to the previous workspace |
@@ -190,7 +190,7 @@ chrome (always armour white)      terminals (three variants, pick one)
 
 ### Switching variants
 
-`Super+t` opens a rofi picker (`rofi-gundam`) with the active variant marked —
+`Super+Shift+t` opens a rofi picker (`rofi-gundam`) with the active variant marked —
 same thing, no terminal needed. Or by hand:
 
 ```bash

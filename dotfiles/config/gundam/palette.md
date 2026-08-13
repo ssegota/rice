@@ -44,7 +44,7 @@ the terminal's sixteen colours: left on `dark`, its blue sits at about 1.6:1 on
 armour white. `gundam-theme` flips it to `light` for ARMOR and PANEL.
 
 Switch the terminal variant with `gundam-theme armor|panel|cockpit`, or
-`Super+t` for the rofi picker (`rofi-gundam`). `cockpit` is the previous
+`Super+Shift+t` for the rofi picker (`rofi-gundam`). `cockpit` is the previous
 dark theme, kept for night work.
 
 Previous (all-dark) configs: `~/gundam-dark-backup-2026-08-08/`
