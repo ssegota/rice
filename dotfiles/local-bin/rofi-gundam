@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# rofi-gundam — switch the terminal variant without a terminal (Super+t)
+#
+# Front-end for gundam-theme: lists armor / panel / cockpit with the active
+# variant marked and preselected, applies the choice, then pops a dunst
+# notification with the two reloads that aren't free (ghostty, btop).
+set -euo pipefail
+
+GT="$(command -v gundam-theme || echo "$HOME/.local/bin/gundam-theme")"
+
+rows=(
+  "armor    light — the dashboard's own colours"
+  "panel    light — greyer ground, less glare"
+  "cockpit  dark — for night work"
+)
+
+active="$("$GT" status 2>/dev/null | awk 'NR==1 {print $2}')"
+
+idx=-1
+for i in "${!rows[@]}"; do
+  [ "${rows[$i]%% *}" = "$active" ] && idx=$i
+done
+
+args=(-dmenu -i -p "gundam" -no-custom -mesg "active: ${active:-unknown}")
+[ "$idx" -ge 0 ] && args+=(-selected-row "$idx" -a "$idx")
+
+choice="$(printf '%s\n' "${rows[@]}" | rofi "${args[@]}")" || exit 0
+[ -n "$choice" ] || exit 0
+v="${choice%% *}"
+[ "$v" = "$active" ] && exit 0
+
+if out="$("$GT" "$v" 2>&1)"; then
+  notify-send "Gundam: $v" \
+    "ghostty: ctrl+shift+,  ·  btop: restart\nkitty · starship · claude: live"
+else
+  notify-send -u critical "gundam-theme $v failed" "$out"
+  exit 1
+fi

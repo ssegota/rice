@@ -127,6 +127,7 @@ bindsym $mod+d exec --no-startup-id rofi -show drun
 bindsym $mod+Tab exec --no-startup-id rofi -show window
 bindsym $mod+Shift+e exec --no-startup-id ~/.local/bin/rofi-power
 bindsym $mod+Shift+w exec --no-startup-id ~/.local/bin/rofi-wallpaper
+bindsym $mod+t exec --no-startup-id ~/.local/bin/rofi-gundam
 bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
 # notifications (dunst)

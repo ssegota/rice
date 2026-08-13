@@ -43,7 +43,8 @@ Claude Code is in that column because it paints its own TUI rather than using
 the terminal's sixteen colours: left on `dark`, its blue sits at about 1.6:1 on
 armour white. `gundam-theme` flips it to `light` for ARMOR and PANEL.
 
-Switch the terminal variant with `gundam-theme armor|panel|cockpit`.
-`cockpit` is the previous dark theme, kept for night work.
+Switch the terminal variant with `gundam-theme armor|panel|cockpit`, or
+`Super+t` for the rofi picker (`rofi-gundam`). `cockpit` is the previous
+dark theme, kept for night work.
 
 Previous (all-dark) configs: `~/gundam-dark-backup-2026-08-08/`

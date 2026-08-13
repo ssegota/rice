@@ -357,7 +357,7 @@ ${B}Done.${R} What's left, in order:
     Super+Escape  lock             F12            guake dropdown
     Print         flameshot        Super+r        resize mode
     Super+c       clipboard hist   Super+n        notification history
-    Super+Shift+w wallpaper picker
+    Super+Shift+w wallpaper picker Super+t        theme variant switcher
     Focus/move:   h / j / k / l    (vim-standard; split-h moved to Super+b)
 
   Backups of anything replaced: ${DIM}${BACKUP_DIR}${R}

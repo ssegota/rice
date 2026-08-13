@@ -73,7 +73,7 @@ rice/
 │   ├── home/                   → $HOME          .bashrc .profile .vimrc .gitconfig …
 │   ├── config/                 → ~/.config      i3 polybar picom rofi ghostty starship …
 │   │   └── gundam/palette.md   the eleven colours every config draws from
-│   └── local-bin/              → ~/.local/bin   rofi-power rofi-wallpaper gundam-theme
+│   └── local-bin/              → ~/.local/bin   rofi-{power,wallpaper,keybinds,gundam} gundam-theme
 ├── wallpapers/                 32 images (~56 MB) → ~/Pictures/wallpapers
 ├── fonts/install-fonts.sh      JetBrainsMono Nerd Font
 ├── packages/
@@ -121,6 +121,7 @@ split moved to `Super+b` ("beside") to free up the `h`.
 | 3-finger swipe L/R | previous / next workspace |
 | 3-finger swipe up | last workspace (`back_and_forth`) |
 | 🆕 `Super+Shift+w` | wallpaper picker (rofi, with thumbnails) |
+| 🆕 `Super+t` | theme variant switcher (rofi front-end for `gundam-theme`) |
 | 🆕 `Super+c` | clipboard history (greenclip → rofi) |
 | 🆕 `Super+n` / `Super+Shift+n` | notification history / close all (dunst) |
 | 🆕 `Super+<current ws number>` | jumps back to the previous workspace |
@@ -188,6 +189,9 @@ chrome (always armour white)      terminals (three variants, pick one)
 ```
 
 ### Switching variants
+
+`Super+t` opens a rofi picker (`rofi-gundam`) with the active variant marked —
+same thing, no terminal needed. Or by hand:
 
 ```bash
 gundam-theme            # print the active variant
