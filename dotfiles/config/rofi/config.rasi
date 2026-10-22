@@ -1,5 +1,8 @@
 configuration {
-    modi: "drun,run,window";
+    modi: "combi,drun,run,window";
+    /* rofi-smart catches typed text that isn't an app: math -> result, URL -> firefox, else -> web search */
+    combi-modes: "smart:/home/sbs/.local/bin/rofi-smart,drun";
+    combi-hide-mode-prefix: true;
     show-icons: true;
     icon-theme: "Papirus";
     terminal: "ghostty";

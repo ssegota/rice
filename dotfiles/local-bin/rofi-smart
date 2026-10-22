@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# rofi script mode, used as the first mode in combi (see ~/.config/rofi/config.rasi).
+# It lists no entries of its own; combi hands it any typed text that isn't an app:
+#   math expression -> result copied to clipboard and shown in a rofi popup
+#   URL / domain    -> opened in Firefox
+#   anything else   -> searched with Firefox's default search engine
+
+# Initial call (no argument): nothing to list.
+[ -z "$1" ] && exit 0
+input="$1"
+
+# Everything launched from here must be detached with its output closed,
+# otherwise rofi keeps waiting for this script's stdout.
+detach() { setsid -f "$@" >/dev/null 2>&1 </dev/null; }
+
+# Prints the result and exits 0 only if the input is an arithmetic expression.
+result="$(/usr/bin/python3 -I - "$input" <<'EOF'
+import ast, math, operator, sys
+
+expr = sys.argv[1].replace("^", "**").replace("×", "*").replace("÷", "/")
+ops = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+       ast.Div: operator.truediv, ast.FloorDiv: operator.floordiv,
+       ast.Mod: operator.mod, ast.Pow: operator.pow,
+       ast.USub: operator.neg, ast.UAdd: operator.pos}
+names = {k: v for k, v in vars(math).items() if not k.startswith("_")}
+names.update(abs=abs, round=round, min=min, max=max, ln=math.log)
+
+def ev(n):
+    if isinstance(n, ast.Constant) and type(n.value) in (int, float):
+        return n.value
+    if isinstance(n, ast.BinOp) and type(n.op) in ops:
+        return ops[type(n.op)](ev(n.left), ev(n.right))
+    if isinstance(n, ast.UnaryOp) and type(n.op) in ops:
+        return ops[type(n.op)](ev(n.operand))
+    if isinstance(n, ast.Name) and n.id in names:
+        return names[n.id]
+    if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id in names:
+        return names[n.func.id](*map(ev, n.args))
+    raise ValueError
+
+try:
+    tree = ast.parse(expr.strip(), mode="eval").body
+    # A bare number or name ("2026", "pi") is more likely a search than a sum.
+    if not isinstance(tree, (ast.BinOp, ast.UnaryOp, ast.Call)):
+        sys.exit(1)
+    r = ev(tree)
+except Exception:
+    sys.exit(1)
+if isinstance(r, float) and r.is_integer() and abs(r) < 1e15:
+    r = int(r)
+print(f"{r:.12g}" if isinstance(r, float) else r)
+EOF
+)"
+
+if [ $? -eq 0 ]; then
+    printf '%s' "$result" | xclip -selection clipboard >/dev/null 2>&1
+    # Popup after this rofi instance has closed.
+    detach sh -c 'sleep 0.15; rofi -e "$1"' _ "$input = $result    (copied)"
+elif [[ "$input" =~ ^(https?|file)://[^[:space:]]+$ ]]; then
+    detach firefox --new-tab "$input"
+elif [[ "$input" =~ ^(localhost|127\.0\.0\.1)(:[0-9]+)?(/[^[:space:]]*)?$ ]]; then
+    detach firefox --new-tab "http://$input"
+elif [[ "$input" =~ ^[^[:space:]/]+\.[a-zA-Z]{2,}(:[0-9]+)?(/[^[:space:]]*)?$ ]]; then
+    detach firefox --new-tab "https://$input"
+else
+    detach firefox --search "$input"
+fi

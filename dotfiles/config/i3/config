@@ -123,7 +123,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # rofi
-bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+d exec --no-startup-id rofi -show combi
 bindsym $mod+Tab exec --no-startup-id rofi -show window
 bindsym $mod+Shift+e exec --no-startup-id ~/.local/bin/rofi-power
 bindsym $mod+Shift+w exec --no-startup-id ~/.local/bin/rofi-wallpaper

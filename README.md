@@ -73,7 +73,7 @@ rice/
 │   ├── home/                   → $HOME          .bashrc .profile .vimrc .gitconfig …
 │   ├── config/                 → ~/.config      i3 polybar picom rofi ghostty starship …
 │   │   └── gundam/palette.md   the eleven colours every config draws from
-│   └── local-bin/              → ~/.local/bin   rofi-{power,wallpaper,keybinds,gundam} gundam-theme
+│   └── local-bin/              → ~/.local/bin   rofi-{power,wallpaper,keybinds,gundam,smart} gundam-theme
 ├── wallpapers/                 32 images (~56 MB) → ~/Pictures/wallpapers
 ├── fonts/install-fonts.sh      JetBrainsMono Nerd Font
 ├── packages/
@@ -103,7 +103,7 @@ split moved to `Super+b` ("beside") to free up the `h`.
 | `Super+Return` | ghostty |
 | `Super+Shift+Return` | warp-terminal |
 | `F12` | guake dropdown |
-| `Super+d` | rofi (drun) |
+| `Super+d` | rofi (drun + `rofi-smart`: type a sum → result copied, a URL → Firefox, anything else → web search) |
 | `Super+Tab` | rofi window switcher |
 | `Super+Shift+e` | rofi power menu |
 | `Super+Escape` | lock (i3lock-fancy) |
@@ -321,6 +321,10 @@ machine.
 - **`rofi-wallpaper`** (`Super+Shift+w`) — thumbnail picker over
   `~/Pictures/wallpapers`; persists via `~/.fehbg`. Enter sets the image on
   the focused monitor only (the rest keep theirs); Alt+1 sets it everywhere.
+- **`rofi-smart`** (`Super+d`) — combi mode in front of drun: text that
+  matches no app is evaluated as maths (`2^10`, `sqrt(2)*3`; result popped up
+  and copied), opened in Firefox if it looks like a URL, or else searched
+  with Firefox's default engine.
 - **greenclip** (`Super+c`) — clipboard history, daemon started by i3.
 - **autotiling** — splits alternate h/v automatically by window shape.
 - **autorandr** — current two-monitor layout saved as profile `home`.
