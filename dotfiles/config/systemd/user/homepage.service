@@ -1,0 +1,12 @@
+[Unit]
+Description=NEXUS Firefox homepage (127.0.0.1:8484)
+After=network-online.target
+
+[Service]
+ExecStart=%h/homepage/.venv/bin/python %h/homepage/server.py
+WorkingDirectory=%h/homepage
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

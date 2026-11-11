@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh ~/Smart symlink smart folders
+
+[Service]
+Type=oneshot
+Nice=15
+IOSchedulingClass=idle
+ExecStart=%h/.local/bin/smartfolders

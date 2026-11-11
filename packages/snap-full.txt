@@ -1,27 +1,32 @@
-bare	latest/stable	base
-code	latest/stable	classic
-core18	latest/stable	base
-core20	latest/stable	base
-core22	latest/stable	base
-core24	latest/stable	base
-desktop-security-center	1/stable/…	-
-firefox	latest/stable/…	-
-firmware-updater	1/stable/…	-
-gaming-graphics-core24	kisak-fresh/stable	-
-ghostty	latest/stable	classic
-gnome-3-28-1804	latest/stable	-
-gnome-42-2204	latest/stable/…	-
-gnome-46-2404	latest/stable	-
-gtk-common-themes	latest/stable/…	-
-jdownloader2	latest/stable	-
-mesa-2404	latest/stable	-
-prompting-client	1/stable/…	-
-signal-desktop	latest/stable	-
-snap-store	2/stable/…	-
-snapd	latest/stable	snapd
-snapd-desktop-integration	latest/stable/…	-
-steam	latest/stable	-
-teams-for-linux	latest/stable	-
-telegram-desktop	latest/stable	-
-termius-app	latest/stable	-
-thunderbird	latest/stable	-
+Name                       Version                         Rev    Tracking            Publisher           Notes
+bare                       1.0                             5      latest/stable       canonical**         base
+bruno                      4.3.0                           122    latest/stable       helloanoop          -
+code                       c4453f8e                        278    latest/stable       vscode**            classic
+core                       16-2.61.4-20260225              17292  latest/stable       canonical**         core
+core18                     20261023                        3267   latest/stable       canonical**         base
+core20                     20260901                        2922   latest/stable       canonical**         base
+core22                     20260909                        2987   latest/stable       canonical**         base
+core24                     20260824                        2124   latest/stable       canonical**         base
+core26                     20261023                        750    latest/stable       canonical**         base
+dbeaver-ce                 26.2.4                          573    latest/stable       dbeaver-corp        classic
+desktop-security-center    0+git.4adf2b9                   206    1/stable/…          canonical**         -
+firefox                    159.0.1-1                       9171   latest/stable/…     mozilla**           -
+firmware-updater           0+git.64c41a0                   262    1/stable/…          canonical**         -
+gaming-graphics-core24     25.2.2~kisak1~n                 13     kisak-fresh/stable  canonical**         -
+ghostty                    v1.4.0                          1016   latest/stable       ken-vandine*        classic
+gnome-3-28-1804            3.28.0-19-g98f9e67.98f9e67      198    latest/stable       canonical**         -
+gnome-42-2204              0+git.4982e7b-sdk0+git.69b626a  263    latest/stable/…     canonical**         -
+gnome-46-2404              0+git.b31ceab-sdk0+git.ef6f7e9  177    latest/stable       canonical**         -
+gtk-common-themes          0.1-81-g442e511                 1535   latest/stable/…     canonical**         -
+jdownloader2               0+git.6b03563                   20     latest/stable       fnkr                -
+mesa-2404                  25.2.8-snap288                  1839   latest/stable       canonical**         -
+prompting-client           0+git.dd8c750                   228    1/stable/…          canonical**         -
+signal-desktop             8.34.0                          965    latest/stable       snapcrafters*       -
+snap-store                 0+git.5534399d                  1468   2/stable/…          canonical**         -
+snapd                      2.78                            28332  latest/stable       canonical**         snapd
+snapd-desktop-integration  0.9                             391    latest/stable/…     canonical**         -
+steam                      1.0.0.87                        279    latest/stable       canonical**         -
+teams-for-linux            2.29.0                          2718   latest/stable       ismaelmartinez      -
+telegram-desktop           7.4.2                           7187   latest/stable       telegram-desktop**  -
+termius-app                10.4.1                          277    latest/stable       termius**           -
+thunderbird                159.0-1                         1312   latest/stable       canonical**         -

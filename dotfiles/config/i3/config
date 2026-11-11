@@ -128,6 +128,7 @@ bindsym $mod+Tab exec --no-startup-id rofi -show window
 bindsym $mod+Shift+e exec --no-startup-id ~/.local/bin/rofi-power
 bindsym $mod+Shift+w exec --no-startup-id ~/.local/bin/rofi-wallpaper
 bindsym $mod+Shift+t exec --no-startup-id ~/.local/bin/rofi-gundam
+bindsym $mod+o exec --no-startup-id ~/.local/bin/rofi-smartfolders
 bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
 # notifications (dunst)
@@ -162,8 +163,8 @@ set $ws10 "10"
 # numbering follows the layout instead of whatever order i3 first saw the plugs.
 # The trailing output is the fallback for when the dock is unplugged.
 workspace $ws1 output eDP-1
-workspace $ws2 output DP-1-3 DP-1 eDP-1
-workspace $ws3 output DP-1-1 DP-1 eDP-1
+workspace $ws2 output DP-1-3 DP-1-1 DP-1 eDP-1
+workspace $ws3 output DP-1-2 DP-1-1 DP-1 eDP-1
 
 # pressing the current workspace's number again jumps back to the previous one
 workspace_auto_back_and_forth yes
@@ -241,8 +242,8 @@ bindsym $mod+Escape exec --no-startup-id i3lock-fancy -gp
 exec_always --no-startup-id xrandr --output eDP-1 --mode 1920x1200
 exec_always --no-startup-id xrandr --output DP-1-3 --right-of eDP-1 --mode 1920x1080
 exec_always --no-startup-id xrandr --output DP-1-1 --right-of DP-1-3 --mode 1280x1024
-exec_always --no-startup-id xrandr --output DP-1 --right-of eDP-1 --mode 1920x1080 --rotate right
-bindsym $mod+p exec --no-startup-id xrandr --output HDMI-1 --left-of eDP-1
+exec_always --no-startup-id xrandr --output DP-1 --right-of eDP-1 --mode 1920x1080 --rotate normal
+bindsym $mod+p exec --no-startup-id ~/.local/bin/rofi-autorandr
 # autorandr re-applies the saved profile for whatever is plugged in.
 # Save a profile at each dock ("autorandr --save <name>"); once every setup
 # you use has one, the hardcoded xrandr lines above can be deleted.

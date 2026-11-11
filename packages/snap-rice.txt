@@ -11,3 +11,5 @@ termius-app
 steam
 jdownloader2
 snap-store
+bruno
+dbeaver-ce

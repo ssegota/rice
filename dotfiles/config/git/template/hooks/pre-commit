@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# gitleaks secret scan on staged changes (installed by setup-dev-env.sh)
+# bypass once with: git commit --no-verify
+command -v gitleaks >/dev/null || exit 0
+exec gitleaks git --pre-commit --staged --redact --no-banner

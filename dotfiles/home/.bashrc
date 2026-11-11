@@ -66,6 +66,10 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+# alsamixer's ncurses build may not find Ghostty's snap-provided terminfo
+# entry (especially through sudo). Use the widely available xterm entry.
+alias alsamixer='TERM=xterm-256color alsamixer'
+
 # --- Safer file ops ---
 alias cp='cp -iv'
 alias mv='mv -iv'
@@ -223,3 +227,8 @@ alias preview='fzf --preview="bat --color=always --style=numbers --line-range=:5
 
 eval "$(starship init bash)"
 
+
+# WakaTime terminal tracking
+[ -f ~/.bash-wakatime.sh ] && . ~/.bash-wakatime.sh
+alias assume=". assume"
+export AWS_VAULT_BACKEND=secret-service

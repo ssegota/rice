@@ -1,5 +1,4 @@
 {
-    "workbench.colorTheme": "Tokyo Night",
     "claudeCode.preferredLocation": "panel",
     "chat.viewSessions.orientation": "stacked",
     "security.promptForLocalFileProtocolHandling": false,
@@ -18,5 +17,6 @@
         "command": true,
         "gh": true,
         "*": true, 
-    }
+    },
+    "workbench.colorTheme": "Red Black White Dark"
 }

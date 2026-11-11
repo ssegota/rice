@@ -45,6 +45,29 @@ curl -fsSL https://repo.waydro.id/waydroid.gpg \
 echo "deb [signed-by=$KEYRINGS/waydroid.gpg] https://repo.waydro.id/ ${VERSION_CODENAME} main" \
   | sudo tee /etc/apt/sources.list.d/waydroid.list >/dev/null
 
+# ── Docker CE ─────────────────────────────────────────────────────────
+# (these three are also what ~/Documents/daignostics/setup-dev-env.sh adds)
+add "Docker CE"
+. /etc/os-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${VERSION_CODENAME} stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+# ── 1Password CLI ─────────────────────────────────────────────────────
+add "1Password"
+curl -fsSL https://downloads.1password.com/linux/keys/1password.asc \
+  | sudo gpg --dearmor --yes -o /etc/apt/keyrings/1password.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/1password.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" \
+  | sudo tee /etc/apt/sources.list.d/1password.list >/dev/null
+
+# ── Common Fate (granted / assume) ────────────────────────────────────
+add "Common Fate granted"
+curl -fsSL https://apt.releases.commonfate.io/gpg \
+  | sudo gpg --dearmor --yes -o /etc/apt/keyrings/granted.gpg
+echo "deb [signed-by=/etc/apt/keyrings/granted.gpg] https://apt.releases.commonfate.io stable main" \
+  | sudo tee /etc/apt/sources.list.d/granted.list >/dev/null
+
 # ── PPAs ──────────────────────────────────────────────────────────────
 add "PPAs (obs-studio, openshot)"
 sudo add-apt-repository -y ppa:obsproject/obs-studio
@@ -61,7 +84,12 @@ Not scripted (grab the .deb or vendor installer yourself):
   * Viber             https://www.viber.com/download/
   * RustDesk          https://github.com/rustdesk/rustdesk/releases
   * VirtualBox 7.2    https://www.virtualbox.org/wiki/Linux_Downloads
-  * FortiClient       (was configured here; add only if you still need the VPN)
+  * FortiClient       (was configured here; add only if you still need the VPN —
+                       openfortivpn from apt is what actually connects to Bura)
+  * balenaEtcher      https://github.com/balena-io/etcher/releases (.deb)
+
+Ubuntu mirror: this machine uses http://si.archive.ubuntu.com/ubuntu/ in
+/etc/apt/sources.list.d/ubuntu.sources (hr.archive was unreliable, 2026-09).
 NOTE
 
 sudo apt-get update

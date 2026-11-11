@@ -223,9 +223,9 @@ stage_external() {
     run chmod +x "$HOME/.local/bin/greenclip"
   fi
 
-  # autorandr profiles are per-machine: save one at each monitor setup with
-  # `autorandr --save <name>` (the apt package provides hotplug udev rules).
-  have autorandr && skip "autorandr present — remember to --save a profile per dock"
+  # autorandr profiles in dotfiles/config/autorandr match THIS laptop's monitors
+  # by EDID; on other hardware save your own with `autorandr --save <name>`.
+  have autorandr && skip "autorandr present — Super+p picks a profile (rofi-autorandr)"
 }
 
 stage_dotfiles() {
@@ -242,6 +242,9 @@ stage_dotfiles() {
 
   for f in "$d"/config/*; do
     [ -e "$f" ] || continue
+    # systemd/user is placed file-by-file in stage_services — replacing the
+    # whole dir would drop the existing *.wants symlinks (snapd's included).
+    [ "$(basename "$f")" = systemd ] && continue
     place "$f" ".config/$(basename "$f")"
   done
 
@@ -328,7 +331,49 @@ stage_services() {
       warn "could not enable tlp — check 'systemctl status tlp'"
     fi
   fi
-  if have tailscale; then skip "tailscale installed — run 'sudo tailscale up' to join your tailnet"; fi
+  if have tailscale; then
+    skip "tailscale installed — run 'sudo tailscale up' to join your tailnet"
+    skip "then 'sudo tailscale set --operator=\$USER' so the polybar dot can toggle it"
+  fi
+
+  # ── user systemd units (placed one by one; see stage_dotfiles) ──
+  local ud="$RICE_DIR/dotfiles/config/systemd/user"
+  if [ -d "$ud" ]; then
+    while IFS= read -r f; do
+      place "$f" ".config/systemd/user/${f#"$ud"/}"
+    done < <(find "$ud" -type f | sort)
+
+    # ALSA "headphones" path override for the ThinkPad USB-C dock jack:
+    # a full copy of the stock paths dir with one file patched, picked up by
+    # pipewire/wireplumber via the ACP_PATHS_DIR drop-ins placed above.
+    local acp="$HOME/.local/share/alsa-card-profile/mixer/paths"
+    if [ -d /usr/share/alsa-card-profile/mixer/paths ]; then
+      run mkdir -p "$acp"
+      run cp -an /usr/share/alsa-card-profile/mixer/paths/. "$acp/"
+      run cp "$RICE_DIR/system/alsa-card-profile/analog-output-headphones.conf" "$acp/"
+    fi
+
+    run systemctl --user daemon-reload
+    run systemctl --user enable smartfolders.timer
+    run systemctl --user enable headphone-autoswitch.service
+    run systemctl --user restart pipewire wireplumber pipewire-pulse
+    if [ -x "$HOME/.dropbox-dist/dropboxd" ]; then
+      run systemctl --user enable --now dropbox.service
+    else
+      skip "dropbox.service placed but not enabled — install the daemon first (packages/external-tools.md)"
+    fi
+    if [ -d "$HOME/homepage" ]; then
+      run systemctl --user enable --now homepage.service
+    else
+      skip "homepage.service placed but not enabled — clone the NEXUS homepage to ~/homepage first"
+    fi
+  fi
+
+  # Lid closed = keep running (docked work). System file, so opt-in.
+  if [ ! -f /etc/systemd/logind.conf.d/lid.conf ] && confirm "Ignore the lid switch (system/logind-lid.conf)?"; then
+    run sudo install -Dm644 "$RICE_DIR/system/logind-lid.conf" /etc/systemd/logind.conf.d/lid.conf
+    skip "takes effect after reboot or 'sudo systemctl restart systemd-logind' (ends the session)"
+  fi
   if have lightdm; then
     ok "lightdm present — pick the 'i3' session at the login screen"
     skip "greeter theming reference: system/lightdm-gtk-greeter.conf"

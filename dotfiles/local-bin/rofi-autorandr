@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# rofi-autorandr — pick an autorandr display profile (Super+p)
+#
+# Lists every saved profile, tagging the one currently applied and the ones
+# whose saved monitors match what's plugged in right now. Enter applies it,
+# then relaunches polybar so the bars land on the new monitor layout.
+#
+# Extra rows:
+#   Auto-detect     — same as `autorandr --change` (picks the best match)
+#   Save current…   — prompts for a name and saves the live layout
+set -euo pipefail
+
+auto="󰍹  Auto-detect"
+save="  Save current layout…"
+
+current="$(autorandr --current 2>/dev/null || true)"
+detected="$(autorandr --detected 2>/dev/null || true)"
+
+rows="$auto"$'\n'
+while read -r name _; do
+    [[ -z "$name" ]] && continue
+    tags=""
+    grep -qxF "$name" <<<"$current"  && tags+="  [current]"
+    grep -qxF "$name" <<<"$detected" && tags+="  [detected]"
+    rows+="$name$tags"$'\n'
+done < <(autorandr --list)
+rows+="$save"
+
+chosen="$(printf '%s' "$rows" | rofi -dmenu -i -p "Displays" \
+    -nb "#282c34" -nf "#abb2bf" -sb "#61afef" -sf "#282c34")" || exit 0
+
+case "$chosen" in
+    "$auto")
+        autorandr --change --default single
+        ;;
+    "$save")
+        name="$(rofi -dmenu -p "Profile name" -lines 0 </dev/null)" || exit 0
+        [[ -z "$name" ]] && exit 0
+        autorandr --save "$name" --force
+        notify-send "autorandr" "Saved profile '$name'" 2>/dev/null || true
+        exit 0
+        ;;
+    *)
+        profile="${chosen%%  \[*}"   # strip the [current]/[detected] tags
+        if ! autorandr --load "$profile"; then
+            notify-send -u critical "autorandr" "Failed to load '$profile' (monitors not connected?)" 2>/dev/null || true
+            exit 1
+        fi
+        ;;
+esac
+
+# Bars are sized per monitor at launch; re-run the (flock'd) launcher.
+"$HOME/.config/polybar/launch.sh" >/dev/null 2>&1 &

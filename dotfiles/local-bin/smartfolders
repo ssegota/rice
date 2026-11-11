@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Rebuild ~/Smart/* symlink "smart folders" from ~/.config/smartfolders/folders.conf
+set -uo pipefail
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/smartfolders/folders.conf"
+OUT="$HOME/Smart"
+FD=$(command -v fdfind || command -v fd) || { echo "fd not found" >&2; exit 1; }
+EXCL=(-E node_modules -E __pycache__ -E .venv -E venv -E site-packages -E '*.part' -E '*.crdownload' -E .dropbox.cache)
+
+roots=()
+mkdir -p "$OUT"
+declare -A keep=()
+
+while IFS= read -r line; do
+  [[ -z "${line// }" || "$line" =~ ^[[:space:]]*# ]] && continue
+  if [[ "$line" =~ ^[[:space:]]*ROOTS[[:space:]]*= ]]; then
+    eval "roots=(${line#*=})"; continue
+  fi
+  IFS='|' read -r name max args <<<"$line"
+  name=$(sed 's/^ *//;s/ *$//' <<<"$name"); max=${max// /}; [[ -z "$max" ]] && max=300
+  eval "fdargs=($args)"
+  # --search-path in the line overrides ROOTS
+  paths=(); [[ " $args " == *" --search-path "* ]] || paths=("${roots[@]}")
+
+  tmp=$(mktemp -d "$OUT/.build.XXXX")
+  "$FD" -t f -a -0 "${EXCL[@]}" "${fdargs[@]}" . "${paths[@]}" 2>/dev/null \
+    | xargs -0 -r stat --printf '%Y\t%n\n' 2>/dev/null \
+    | sort -rn | head -n "$max" | cut -f2- \
+    | while IFS= read -r f; do
+        base=$(basename -- "$f"); link="$tmp/$base"
+        if [[ -e "$link" || -L "$link" ]]; then         # name collision → add parent dir
+          link="$tmp/${base%.*} ($(basename -- "$(dirname -- "$f")")).${base##*.}"
+          [[ "$base" != *.* ]] && link="$tmp/$base ($(basename -- "$(dirname -- "$f")"))"
+        fi
+        [[ -e "$link" || -L "$link" ]] || ln -s -- "$f" "$link"
+      done
+  rm -rf -- "$OUT/$name.old"
+  [[ -d "$OUT/$name" ]] && mv -- "$OUT/$name" "$OUT/$name.old"
+  mv -- "$tmp" "$OUT/$name" && rm -rf -- "$OUT/$name.old"
+  keep["$name"]=1
+done < "$CONF"
+
+# remove folders no longer in the config (only dirs that contain nothing but symlinks)
+for d in "$OUT"/*/; do
+  n=$(basename "$d"); [[ -n "${keep[$n]:-}" ]] && continue
+  [[ -z $(find "$d" -mindepth 1 ! -type l -print -quit) ]] && rm -rf -- "$d"
+done
+rm -rf "$OUT"/.build.* 2>/dev/null

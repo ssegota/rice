@@ -11,6 +11,16 @@
 
 set -u
 
+# Serialize concurrent runs. i3 exec_always fires this once per reload/restart
+# with no concurrency guard; two quick reloads used to race — one run's
+# `pkill -x polybar` killed the other's just-spawned bars, then its wait loop
+# hung forever. flock -o keeps the lock fd in the flock parent so the bars and
+# watcher spawned below don't inherit it and hold the lock past our exit.
+if [[ -z "${POLYBAR_LAUNCH_LOCKED:-}" ]]; then
+    export POLYBAR_LAUNCH_LOCKED=1
+    exec flock -o -w 30 /tmp/polybar-launch.lock "$0" "$@"
+fi
+
 PIDFILE=/tmp/polybar-pids
 LOGDIR=/tmp
 AUTOHIDE="$HOME/.config/polybar/scripts/polybar-autohide.sh"
@@ -18,7 +28,13 @@ AUTOHIDE="$HOME/.config/polybar/scripts/polybar-autohide.sh"
 # --- Kill existing bars and watcher -----------------------------------------
 pkill -x polybar
 pkill -f polybar-autohide.sh
-while pgrep -x polybar >/dev/null; do sleep 0.2; done
+for ((i = 0; i < 25; i++)); do
+    pgrep -x polybar >/dev/null || break
+    sleep 0.2
+done
+# A bar that ignored SIGTERM for 5s is wedged; don't hang like the old
+# unbounded loop did.
+pgrep -x polybar >/dev/null && pkill -9 -x polybar
 
 : > "$PIDFILE"
 

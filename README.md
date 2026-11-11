@@ -4,7 +4,8 @@ Everything needed to rebuild this desktop on a fresh Ubuntu box — and, since
 it's been months, a written record of what the setup actually *is*.
 
 Captured **2026-08-05** from Ubuntu 26.04 LTS (`resolute`), kernel 7.0.0-28,
-X11 + i3 + LightDM, Croatian keyboard layout. Rethemed **2026-08-08** from
+X11 + i3 + LightDM, Croatian keyboard layout. Re-synced with the live system
+**2026-11-11** (see [Round 3](#round-3--2026-11-11-re-sync)). Rethemed **2026-08-08** from
 Tokyo Night to Gundam RX-78-2 — see [Theme](#theme--gundam-rx-78-2-federation-armor).
 
 ```
@@ -57,7 +58,7 @@ It's staged and re-runnable. Anything it replaces in `$HOME` is copied to
 | `--wallpapers` | images into `~/Pictures/wallpapers` |
 | `--fonts` | downloads JetBrainsMono Nerd Font |
 | `--editors` | VS Code / Cursor `settings.json` + extensions |
-| `--services` | enables `tlp`, prints session notes |
+| `--services` | enables `tlp`; places + enables the user systemd units (smart folders, headphone auto-switch, dropbox, homepage) and the ALSA dock-jack override; offers the lid-switch tweak |
 
 Then log out and pick **i3** at the LightDM session menu.
 
@@ -73,7 +74,8 @@ rice/
 │   ├── home/                   → $HOME          .bashrc .profile .vimrc .gitconfig …
 │   ├── config/                 → ~/.config      i3 polybar picom rofi ghostty starship …
 │   │   └── gundam/palette.md   the eleven colours every config draws from
-│   └── local-bin/              → ~/.local/bin   rofi-{power,wallpaper,keybinds,gundam,smart} gundam-theme
+│   ├── config/systemd/user/    → ~/.config/systemd/user  (placed by --services, file by file)
+│   └── local-bin/              → ~/.local/bin   rofi-{power,wallpaper,keybinds,gundam,smart,autorandr,smartfolders} gundam-theme smartfolders headphone-autoswitch
 ├── wallpapers/                 32 images (~56 MB) → ~/Pictures/wallpapers
 ├── fonts/install-fonts.sh      JetBrainsMono Nerd Font
 ├── packages/
@@ -115,7 +117,8 @@ split moved to `Super+b` ("beside") to free up the `h`.
 | `Super+Shift+space` | floating toggle |
 | `Super+r` | resize mode |
 | `Super+minus` / `Super+Shift+minus` | scratchpad show / send |
-| `Super+p` | attach HDMI-1 to the left |
+| 🆕 `Super+p` | `rofi-autorandr` — pick a display profile (tags `[current]`/`[detected]`), auto-detect, or save the live layout; relaunches polybar |
+| 🆕 `Super+o` | `rofi-smartfolders` — pick a smart folder, then a file in it |
 | `Super+1…0` | workspace; add `Shift` to move the window there |
 | `Super+Shift+c` / `Super+Shift+r` | reload / restart i3 |
 | 3-finger swipe L/R | previous / next workspace |
@@ -145,6 +148,11 @@ split moved to `Super+b` ("beside") to free up the `h`.
 - `shopt` — `autocd`, `cdspell`, `dirspell`, `globstar`
 - `cp`/`mv`/`mkdir` aliased to interactive+verbose
 - `EDITOR=code`, conda init block, `~/.local/bin` and `~/.fly/bin` on `PATH`
+- 🆕 `assume` (granted) for AWS profiles, `AWS_VAULT_BACKEND=secret-service`,
+  WakaTime shell hook, `alsamixer` forced to `TERM=xterm-256color`
+- 🆕 git pages through **delta** (line numbers, `n`/`N` to jump), `zdiff3`
+  conflicts, and every new repo gets a gitleaks pre-commit hook from
+  `~/.config/git/template`
 
 ## Theme — Gundam RX-78-2 "Federation Armor"
 
@@ -371,6 +379,54 @@ machine.
 - **Focus/move keys are now vim-standard `h j k l`** (also in resize mode);
   horizontal split relocated to `Super+b`. The `č` key is retired.
 
+## Round 3 — 2026-11-11, re-sync
+
+Three months of changes made on the live machine, pulled back in.
+
+### Added
+
+- **Chrome follows the variant** (work from 2026-09-01 that had sat uncommitted):
+  polybar, rofi, dunst and i3 borders now switch with `gundam-theme` too — see
+  [One variant, everything](#one-variant-everything).
+- **Smart folders** — `smartfolders` rebuilds `~/Smart/<Name>/` as newest-first
+  symlinks from the `fd` queries in `~/.config/smartfolders/folders.conf`
+  (recent files, PDFs, office docs, invoices/računi, big downloads…).
+  A user timer refreshes every 10 min; `Super+o` browses them.
+- **autorandr profiles** `home`, `office`, `presentation`, `single`,
+  `demo-practice` (they match *this* laptop's monitors by EDID), with
+  `Super+p` → `rofi-autorandr` replacing the hardcoded HDMI xrandr line.
+  autorandr is now the apt package, not a uv tool.
+- **Tailscale dot in polybar** — green connected / red off / yellow starting,
+  click toggles. Needs `sudo tailscale set --operator=$USER` once.
+- **Dock headphone jack** — `headphone-autoswitch` (user service) makes any
+  headphone/headset port the default sink when plugged; plus an ALSA path
+  override (`system/alsa-card-profile/analog-output-headphones.conf`) that
+  teaches PipeWire the ThinkPad USB-C dock's `Headset` jack. The override is
+  loaded via `ACP_PATHS_DIR` drop-ins for pipewire and wireplumber.
+- **Dropbox** daemon as a user unit; **NEXUS homepage** (`~/homepage`,
+  `localhost:8484`) as a user unit. Both are enabled only if their code is present.
+- **Lid switch ignored** (`system/logind-lid.conf`) — offered by `--services`.
+- **`autotiling-launch.sh`** — the flock'd launcher i3 already called; it was
+  missing from the bundle. `polybar/launch.sh` got the same flock guard and no
+  longer hangs if a bar ignores SIGTERM.
+- **Packages**: git-delta, lazygit, tmux, httpie, moreutils, ncdu, nvtop, nmap,
+  pulsemixer, remmina (+rdp/vnc/secret), qdirstat, pitivi, cava, cbonsai,
+  openfortivpn, usb-creator-gtk; third-party docker-ce, 1password-cli,
+  granted (repos added to `scripts/apt-sources.sh`); snaps bruno, dbeaver-ce.
+  Non-apt tools logged in `packages/external-tools.md`.
+- Monitor layout: DP-1 is now landscape (`--rotate normal`), and workspaces
+  2/3 prefer the dock's DP-1-1/DP-1-2.
+- Smaller things: ghostty `term = xterm-256color`, flameshot saves to
+  `~/Downloads`, `.docx` opens in LibreOffice Writer, VS Code theme
+  "Red Black White Dark".
+
+### Deliberately left out
+
+- `liver-c-chain` timer — a research-project job, not part of the desktop.
+- The *active* variant: this machine runs `cockpit`, but the bundle keeps
+  `panel` as the default (`gundam-theme cockpit` after install).
+- cava's config (stock), app state dirs (Chrome, Discord, Obsidian, OBS…).
+
 ## Not captured
 
 - **`~/anaconda3`** — reinstall from the Anaconda installer, then recreate envs
@@ -378,6 +434,11 @@ machine.
 - **App data** for Obsidian vaults, OBS scenes, VirtualBox VMs, Steam/Lutris
   games, Thunderbird/Evolution profiles. Big, and mostly not "config".
 - **AI CLI logins** (claude, cursor-agent, codex, copilot) — re-auth each.
+- **Work dev environment** — `~/Documents/daignostics/setup-dev-env.sh`
+  (AWS CLI/SAM, aws-vault, docker, ollama, gitleaks…) lives with that work,
+  not here; run it after this.
+- **Dropbox daemon** and **~/homepage** — install/clone first; their units are
+  in the bundle.
 - **Credentials** — deliberately, see below.
 - **`texlive-full`** package selections beyond the metapackage.
 

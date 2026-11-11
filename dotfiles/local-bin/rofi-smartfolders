@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Super+o: pick a smart folder, then a file in it; Enter opens it. "📂 Open folder" opens the folder in the file manager.
+S="$HOME/Smart"
+folder=$(ls -1 "$S" | rofi -dmenu -i -p "Smart folder") || exit 0
+[[ -d "$S/$folder" ]] || exit 0
+pick=$( { echo "📂 Open folder"; ls -1t "$S/$folder"; } | rofi -dmenu -i -p "$folder") || exit 0
+if [[ "$pick" == "📂 Open folder" ]]; then xdg-open "$S/$folder"
+else xdg-open "$(readlink -f "$S/$folder/$pick")"; fi

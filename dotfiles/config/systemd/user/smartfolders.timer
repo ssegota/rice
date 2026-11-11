@@ -1,0 +1,9 @@
+[Unit]
+Description=Refresh smart folders every 10 minutes
+
+[Timer]
+OnStartupSec=1min
+OnUnitActiveSec=10min
+
+[Install]
+WantedBy=timers.target

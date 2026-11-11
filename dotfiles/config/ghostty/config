@@ -62,3 +62,4 @@ macos-option-as-alt = left
 keybind = ctrl+shift+enter=new_split:right
 keybind = ctrl+shift+minus=new_split:down
 
+term = xterm-256color

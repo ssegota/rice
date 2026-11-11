@@ -1,0 +1,44 @@
+#!/usr/bin/python3 -I
+"""Make any headphone/headset port that becomes plugged-in the default sink.
+
+WirePlumber keeps a sticky "configured default"; if that's e.g. the monitor's
+HDMI sink, plugging headphones into the dock does nothing. This watches
+pactl events and forces the switch on every plug-in (and on dock reconnect).
+"""
+import json, subprocess, sys, time
+
+def plugged():
+    out = subprocess.run(["pactl", "-f", "json", "list", "sinks"],
+                         capture_output=True, text=True).stdout
+    res = set()
+    for s in json.loads(out or "[]"):
+        for p in s.get("ports", []):
+            n = (p.get("name", "") + " " + p.get("description", "")).lower()
+            if ("headphone" in n or "headset" in n) and p.get("availability") == "available":
+                res.add((s["name"], p["name"]))
+    return res
+
+def switch(sink, port):
+    subprocess.run(["pactl", "set-sink-port", sink, port])
+    subprocess.run(["pactl", "set-default-sink", sink])
+    print(f"headphones plugged: default -> {sink}", flush=True)
+
+def main():
+    prev = set()
+    while True:
+        for k in sorted(plugged() - prev):
+            switch(*k)
+        prev = plugged()
+        ev = subprocess.Popen(["pactl", "subscribe"], stdout=subprocess.PIPE, text=True)
+        for line in ev.stdout:
+            if "on sink" in line or "on card" in line or "on server" in line:
+                time.sleep(0.3)  # let port availability settle
+                now = plugged()
+                for k in sorted(now - prev):
+                    switch(*k)
+                prev = now
+        ev.wait()
+        time.sleep(2)  # pipewire-pulse restarted; resubscribe
+
+if __name__ == "__main__":
+    sys.exit(main())

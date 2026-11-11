@@ -61,6 +61,15 @@ wget
 rar
 gdebi
 pandoc
+git-delta
+lazygit
+tmux
+httpie
+moreutils
+ncdu
+nvtop
+nmap
+pulsemixer
 
 # ── dev toolchain ─────────────────────────────────────────────────────
 build-essential
@@ -72,6 +81,7 @@ python3-venv
 nodejs
 openssh-client
 openssh-server
+openfortivpn          # FortiVPN to Bura HPC
 
 # ── laptop / power / hardware ─────────────────────────────────────────
 tlp
@@ -84,6 +94,7 @@ pcscd
 libccid
 solaar
 efibootmgr
+usb-creator-gtk
 
 # ── filesystems ───────────────────────────────────────────────────────
 ntfs-3g
@@ -113,6 +124,13 @@ thunderbird
 sqlitebrowser
 mdbtools
 calibre
+remmina
+remmina-plugin-rdp
+remmina-plugin-vnc
+remmina-plugin-secret
+qdirstat
+pitivi
+mailcap
 
 # ── fun / misc ────────────────────────────────────────────────────────
 cmatrix
@@ -121,6 +139,8 @@ stellarium
 siril
 lutris
 rpi-imager
+cava
+cbonsai
 
 # ── heavy: LaTeX (several GB — comment out if you don't want it) ──────
 texlive-full
