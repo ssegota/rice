@@ -8,19 +8,16 @@
  * Palette: ~/.config/gundam/palette.md
  */
 
+/* This file is the body: structure only, no colour literals. The tokens it
+   spends (@armor, @slab, @on-slab, ...) are defined in gundam-colors-<variant>
+   .rasi, and gundam-theme concatenates the two into gundam-active.rasi, which
+   is what config.rasi actually loads. rofi 2.0's @import does not merge
+   properties across files, so a build step stands in for it.
+
+   Edit this file for layout, the colours file for colour. Never gundam-active. */
+
 * {
     font:   "JetBrainsMono Nerd Font 12";
-
-    armor:      #e6e7e2ff;
-    armor-hi:   #f8f9f6ff;
-    armor-lo:   #d2d4ceff;
-    line:       #b0b3acff;
-    ink:        #15181fff;
-    ink-dim:    #545a66ff;
-    blue:       #24408eff;
-    red:        #c0272dff;
-    yellow:     #f0b929ff;
-    eye:        #3f9e56ff;
 
     background-color:   transparent;
     text-color:         @ink;
@@ -51,8 +48,8 @@ mainbox {
 
 inputbar {
     font:               "JetBrainsMono Nerd Font 16";
-    background-color:   @blue;
-    text-color:         #ffffffff;
+    background-color:   @slab;
+    text-color:         @on-slab;
     padding:            14px 16px;
     spacing:            12px;
     children:           [ icon-search, entry, case-indicator ];
@@ -70,15 +67,15 @@ icon-search, entry, element-icon, element-text {
 
 entry {
     font:               inherit;
-    text-color:         #ffffffff;
-    cursor-color:       @yellow;
+    text-color:         @on-slab;
+    cursor-color:       @on-slab-active;
 
     placeholder:        "SEARCH";
-    placeholder-color:  #ffffffb0;
+    placeholder-color:  @on-slab-dim;
 }
 
 case-indicator {
-    text-color: @yellow;
+    text-color: @on-slab-active;
 }
 
 /* ── hazard stripe: rofi has no gradients, so a 3px V-fin rule stands in ── */
@@ -148,19 +145,19 @@ element alternate urgent {
 }
 
 element selected {
-    background-color:   @blue;
-    text-color:         #ffffffff;
+    background-color:   @slab;
+    text-color:         @on-slab;
     border-color:       @red;
 }
 
 element selected active {
-    background-color:   @blue;
-    text-color:         @yellow;
+    background-color:   @slab;
+    text-color:         @on-slab-active;
 }
 
 element selected urgent {
     background-color:   @red;
-    text-color:         #ffffffff;
+    text-color:         @on-red;
     border-color:       @ink;
 }
 
@@ -172,5 +169,6 @@ element-icon {
 element-text {
     text-color:         inherit;
     background-color:   transparent;
-    highlight:          bold #c0272dff;
+    /* `highlight` will not take a token reference, so the match colour is set
+       in gundam-colors-<variant>.rasi instead. */
 }

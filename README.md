@@ -172,21 +172,33 @@ top-right), hazard stripes at -45° between a header and its body, uppercase
 letterspaced labels with tabular-mono values, and a 4px colour-coded left
 border to state a row's status. **Yellow is a fill, never text** — `#f0b929`
 is ~1.6:1 on armour white, so anywhere yellow *text* is needed the configs use
-`#7d5a00` instead. Full rationale: [`dotfiles/config/gundam/palette.md`](dotfiles/config/gundam/palette.md).
+`#7d5a00` instead. (On `cockpit` that rule inverts: see below.) Full rationale: [`dotfiles/config/gundam/palette.md`](dotfiles/config/gundam/palette.md).
 
-### Chrome vs. terminals
+### One variant, everything
 
-The split is deliberate — the chrome is the outside of the machine and stays
-armour white in every variant; only the terminals switch.
+Chrome used to stay armour white in every variant — the outside of the machine,
+deliberately fixed. It no longer does: the bar, the launcher, notifications,
+window borders and the wallpaper all move with the terminals.
 
 ```
-chrome (always armour white)      terminals (three variants, pick one)
-├── polybar/config.ini            ├── ghostty/themes/gundam-{armor,panel,cockpit}.conf
-├── rofi/themes/gundam.rasi       ├── kitty/themes/gundam-{armor,panel,cockpit}.conf
-├── dunst/dunstrc                 ├── btop/themes/gundam-{armor,panel,cockpit}.theme
-└── i3/config  (client.* block)   ├── starship.toml  (palette = …)
-                                  └── ~/.claude/settings.json  (theme = …)
+chrome                             terminals
+├── polybar/themes/gundam-*.ini    ├── ghostty/themes/gundam-*.conf
+├── rofi/themes/gundam-colors-*    ├── kitty/themes/gundam-*.conf
+├── dunst/themes/gundam-*.conf     ├── btop/themes/gundam-*.theme
+└── i3/themes/gundam-*.conf        ├── starship.toml  (palette = …)
+                                   └── ~/.claude/settings.json  (theme = …)
+wallpaper
+└── gundam/wallpapers.conf
 ```
+
+Each app keeps one file per variant plus a `gundam-active` symlink that
+`gundam-theme` repoints; the host config includes the symlink and names no
+colour of its own. `polybar` uses `include-file`, `i3` uses `include`, `dunst`
+uses a `dunstrc.d/` drop-in (which outranks `dunstrc`, so a colour set there
+would silently do nothing). **rofi is the exception**: `@import` in rofi 2.0
+does not merge properties across files, so `gundam-active.rasi` is *generated*
+by concatenating `gundam-colors-<variant>.rasi` with `gundam-body.rasi`. Edit
+those two, never the generated file.
 
 ### Switching variants
 
@@ -197,7 +209,8 @@ same thing, no terminal needed. Or by hand:
 gundam-theme            # print the active variant
 gundam-theme armor      # light, ground #e6e7e2 — the dashboard's own colours
 gundam-theme panel      # light, ground #d2d4ce — same hues, greyer, less glare
-gundam-theme cockpit    # the previous dark theme, for night work
+gundam-theme cockpit    # dark, ground #12141a — for night work
+gundam-theme cockpit -k # ... but leave the wallpaper alone
 ```
 
 | Variant | Ground | Opacity | For |
@@ -208,22 +221,44 @@ gundam-theme cockpit    # the previous dark theme, for night work
 
 The ANSI palette is byte-identical across `armor` and `panel` — every colour
 was picked to stay legible on both grounds, so switching changes only the
-ground and the opacity.
+ground and the opacity. `cockpit` is a real inversion: the eleven roles are
+refilled from the Federation hues lifted until they clear 4.5:1 on black, and
+two of the light-theme rules flip. Yellow becomes legible as text (10.2:1), so
+`yellow-ink` is the true `#f0b929` rather than the `#7d5a00` substitute. And
+`blue` splits in two — white on the lifted `#5b83d6` is only 3.7:1, so a filled
+slab (focused workspace, rofi's gate-head, the selected row) takes `blue-deep`
+`#2b3a5e` while `#5b83d6` stays the blue you read. Consumers name which they
+mean: `slab`, `on-slab`, `on-red`.
 
-`gundam-theme` repoints the `gundam-active.conf` symlink that ghostty and kitty
-both include, rewrites btop's `color_theme` line, flips starship's
-`palette =`, and sets Claude Code's `theme` in `~/.claude/settings.json`
-(light for armor/panel, dark for cockpit — its TUI paints its own colours, and
-its dark-theme blue is ~1.6:1 on armour white). Reloads are not all free:
+Reloads are not all free:
 
 - **ghostty** — `ctrl+shift+,` (no IPC reload), or just open a new window
-- **kitty** — `ctrl+shift+f5`; the script also tries `kitty @ load-config`
 - **btop** — reads its theme once at startup, so restart it
+- **kitty** — `ctrl+shift+f5`; the script also tries `kitty @ load-config`
+- **polybar** — restarted for you via the flock'd `launch.sh`
+- **i3** — `i3-msg reload`, which re-reads the include without firing `exec_always`
+- **dunst** — `dunstctl reload`
+- **rofi** — next launch
 - **starship** — next prompt, or `exec bash`
 - **claude** — live; it watches settings.json
 
-Changing polybar/rofi/dunst/i3 colours means editing those files directly;
-they're single-variant by design.
+### Wallpaper per variant
+
+[`dotfiles/config/gundam/wallpapers.conf`](dotfiles/config/gundam/wallpapers.conf)
+maps each variant to one image per monitor, in xrandr order. They were sorted
+into variants by measured mean luminance —
+
+```bash
+identify -format '%[fx:mean*100]' <file>
+```
+
+— bright for `armor`, mid for `panel`, dark for `cockpit`. `gundam-theme`
+applies them with feh, which rewrites `~/.fehbg`, so the choice survives a
+login. Delete a variant's line to leave the wallpaper alone on that switch;
+`-k` skips it once. Picking by hand afterwards (`Super+Shift+w`) wins until the
+next switch. Some of the images referenced are only in `~/Pictures/wallpapers`
+and not in `wallpapers/` here — same as `~/.fehbg` has always been; a fresh
+install warns and skips rather than failing.
 
 **fastfetch** needs no variant files at all: its RX-78-2 head logo
 (`config/fastfetch/rx78-head.txt`, hand-drawn pixel grid) and its labels are

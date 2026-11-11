@@ -3,7 +3,9 @@
 #
 # Front-end for gundam-theme: lists armor / panel / cockpit with the active
 # variant marked and preselected, applies the choice, then pops a dunst
-# notification with the two reloads that aren't free (ghostty, btop).
+# notification with the two reloads that aren't free (ghostty, btop). The bar,
+# borders, notifications, rofi itself and the wallpaper all follow on their
+# own — gundam-theme reloads them.
 set -euo pipefail
 
 GT="$(command -v gundam-theme || echo "$HOME/.local/bin/gundam-theme")"
@@ -13,6 +15,9 @@ rows=(
   "panel    light — greyer ground, less glare"
   "cockpit  dark — for night work"
 )
+
+# The notification lands after the switch, so it is drawn in the new colours —
+# which doubles as the first thing you see confirming dunst followed.
 
 active="$("$GT" status 2>/dev/null | awk 'NR==1 {print $2}')"
 
@@ -31,7 +36,7 @@ v="${choice%% *}"
 
 if out="$("$GT" "$v" 2>&1)"; then
   notify-send "Gundam: $v" \
-    "ghostty: ctrl+shift+,  ·  btop: restart\nkitty · starship · claude: live"
+    "ghostty: ctrl+shift+,  ·  btop: restart\nbar · borders · rofi · wallpaper · kitty · starship · claude: live"
 else
   notify-send -u critical "gundam-theme $v failed" "$out"
   exit 1

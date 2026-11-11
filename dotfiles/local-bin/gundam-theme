@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
-# gundam-theme — switch the terminal half of the rice between variants.
+# gundam-theme — switch the whole rice between variants.
 #
 #   gundam-theme armor     light, ground #e6e7e2 — the dashboard's own colours
 #   gundam-theme panel     light, ground #d2d4ce — same hues, greyer, less glare
-#   gundam-theme cockpit   the previous dark theme, for night work
+#   gundam-theme cockpit   dark, ground #12141a — for night work
 #   gundam-theme           print which variant is active
 #
-# Touches ghostty, kitty, btop, starship and Claude Code together. The chrome —
-# polybar, rofi, dunst, i3 borders — stays armour white in every variant by
-# design; it is the outside of the machine, not the inside.
+# Options:
+#   -k, --keep-wallpaper   switch everything except the wallpaper
 #
+# Terminals (ghostty, kitty, btop, starship, Claude Code), chrome (polybar,
+# rofi, dunst, i3 borders) and the wallpaper all move together. Each of them
+# keeps a themes/gundam-<variant>.<ext> per variant and a gundam-active
+# symlink this script repoints; rofi is the one exception — its @import does
+# not merge properties across files, so its active theme is concatenated from
+# gundam-colors-<variant>.rasi + gundam-body.rasi instead.
+#
+# Wallpaper mapping: ~/.config/gundam/wallpapers.conf
 # Palette and rationale: ~/.config/gundam/palette.md
 
 set -euo pipefail
@@ -21,8 +28,16 @@ BTOP_THEMES="$CFG/btop/themes"
 BTOP_CONF="$CFG/btop/btop.conf"
 STARSHIP="$CFG/starship.toml"
 CLAUDE_SETTINGS="$HOME/.claude/settings.json"
+POLYBAR_THEMES="$CFG/polybar/themes"
+ROFI_THEMES="$CFG/rofi/themes"
+DUNST_THEMES="$CFG/dunst/themes"
+DUNST_DROPIN="$CFG/dunst/dunstrc.d/50-gundam-active.conf"
+I3_THEMES="$CFG/i3/themes"
+WALLPAPERS="$CFG/gundam/wallpapers.conf"
+WALLDIR="$HOME/Pictures/wallpapers"
 
 die() { printf '%s\n' "$*" >&2; exit 1; }
+warn() { printf 'gundam-theme: %s\n' "$*" >&2; }
 
 current() {
   local link
@@ -33,15 +48,73 @@ current() {
   echo "$link"
 }
 
+# Every file the variant needs, so a half-applied theme is not possible: the
+# check runs before the first symlink moves.
+require() {
+  local v=$1 f missing=()
+  local -a want=(
+    "$GHOSTTY_DIR/gundam-$v.conf"
+    "$KITTY_DIR/gundam-$v.conf"
+    "$BTOP_THEMES/gundam-$v.theme"
+    "$POLYBAR_THEMES/gundam-$v.ini"
+    "$ROFI_THEMES/gundam-colors-$v.rasi"
+    "$ROFI_THEMES/gundam-body.rasi"
+    "$DUNST_THEMES/gundam-$v.conf"
+    "$I3_THEMES/gundam-$v.conf"
+  )
+  for f in "${want[@]}"; do [ -f "$f" ] || missing+=("$f"); done
+  (( ${#missing[@]} == 0 )) || die "no '$v' theme — missing:$(printf '\n  %s' "${missing[@]}")"
+}
+
+# One image per monitor for this variant, or nothing if the variant has no
+# line. Comments and blank lines are ignored; bare names are taken to live in
+# ~/Pictures/wallpapers.
+wallpapers_for() {
+  local v=$1 line img
+  [ -r "$WALLPAPERS" ] || return 0
+  line=$(sed -e 's/#.*//' "$WALLPAPERS" | awk -v v="$v" '$1 == v { $1 = ""; print; exit }')
+  # shellcheck disable=SC2086  # deliberate word-splitting: the list is paths
+  set -- $line
+  for img in "$@"; do
+    case "$img" in
+      /*)  printf '%s\n' "$img" ;;
+      ~/*) printf '%s\n' "$HOME/${img#\~/}" ;;
+      *)   printf '%s\n' "$WALLDIR/$img" ;;
+    esac
+  done
+}
+
+set_wallpaper() {
+  local v=$1 img imgs=() missing=()
+  mapfile -t imgs < <(wallpapers_for "$v")
+  (( ${#imgs[@]} )) || { echo "  wallpaper  (no entry for '$v' — left alone)"; return 0; }
+
+  for img in "${imgs[@]}"; do [ -f "$img" ] || missing+=("$img"); done
+  if (( ${#missing[@]} )); then
+    warn "wallpaper skipped, not found:$(printf '\n  %s' "${missing[@]}")"
+    return 0
+  fi
+  if ! command -v feh >/dev/null 2>&1; then
+    warn "wallpaper skipped: feh not installed"
+    return 0
+  fi
+
+  # feh rewrites ~/.fehbg, which i3 replays at startup, so the choice sticks.
+  if feh --bg-fill "${imgs[@]}"; then
+    printf '  wallpaper  %s\n' "$(basename "${imgs[0]}")$( (( ${#imgs[@]} > 1 )) && printf ' +%d more' "$(( ${#imgs[@]} - 1 ))" )"
+  else
+    warn "feh failed to set the wallpaper"
+  fi
+}
+
 # btop reads its theme once at startup, so a running instance keeps the old
-# colours until it is restarted. Everything else can be reloaded live.
+# colours until it is restarted. Ghostty has no reload-over-IPC. Everything
+# else can be reloaded live.
 apply() {
-  local v=$1
+  local v=$1 keep_wallpaper=$2
+  require "$v"
 
-  [ -f "$GHOSTTY_DIR/gundam-$v.conf" ] || die "no ghostty theme for '$v'"
-  [ -f "$KITTY_DIR/gundam-$v.conf" ]   || die "no kitty theme for '$v'"
-  [ -f "$BTOP_THEMES/gundam-$v.theme" ] || die "no btop theme for '$v'"
-
+  # ── terminals ──────────────────────────────────────────────────────────
   ln -sfn "gundam-$v.conf" "$GHOSTTY_DIR/gundam-active.conf"
   ln -sfn "gundam-$v.conf" "$KITTY_DIR/gundam-active.conf"
 
@@ -70,29 +143,86 @@ apply() {
     claude_theme=""   # no key to flip; leave the file alone and say nothing
   fi
 
-  # Live reload where it is free. Ghostty has no reload-over-IPC, so open
-  # terminals need ctrl+shift+, (macOS: cmd+shift+,) — or just a new window.
-  if command -v kitty >/dev/null 2>&1; then
-    kitty @ --to "${KITTY_LISTEN_ON:-unix:/tmp/kitty}" load-config >/dev/null 2>&1 || true
-  fi
+  # ── chrome ─────────────────────────────────────────────────────────────
+  ln -sfn "gundam-$v.ini" "$POLYBAR_THEMES/gundam-active.ini"
+  ln -sfn "../themes/gundam-$v.conf" "$DUNST_DROPIN"
+  ln -sfn "gundam-$v.conf" "$I3_THEMES/gundam-active.conf"
+
+  # rofi has no working include, so build the active theme. Written via a
+  # temporary file so a rofi launched mid-switch never reads half a theme.
+  {
+    printf '/* GENERATED by gundam-theme — do not edit.\n'
+    printf ' * Source: gundam-colors-%s.rasi + gundam-body.rasi\n */\n\n' "$v"
+    cat "$ROFI_THEMES/gundam-colors-$v.rasi"
+    printf '\n'
+    cat "$ROFI_THEMES/gundam-body.rasi"
+  } > "$ROFI_THEMES/.gundam-active.rasi.$$"
+  mv -f "$ROFI_THEMES/.gundam-active.rasi.$$" "$ROFI_THEMES/gundam-active.rasi"
 
   printf 'Variant: %s\n' "$v"
-  printf '  ghostty   reload with ctrl+shift+, (or open a new window)\n'
-  printf '  kitty     reload with ctrl+shift+f5\n'
-  printf '  btop      restart it\n'
-  printf '  starship  next prompt, or: exec bash\n'
-  [ -n "$claude_theme" ] && printf '  claude    %s — live, settings.json is watched\n' "$claude_theme"
+
+  # ── wallpaper ──────────────────────────────────────────────────────────
+  if [ "$keep_wallpaper" = yes ]; then
+    echo "  wallpaper  kept (-k)"
+  else
+    set_wallpaper "$v"
+  fi
+
+  # ── reload what can be reloaded ────────────────────────────────────────
+  if [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    # i3 first: `reload` re-reads the include without firing exec_always, so
+    # it will not race the polybar restart below.
+    if command -v i3-msg >/dev/null 2>&1 && i3-msg -t get_version >/dev/null 2>&1; then
+      i3-msg -q reload >/dev/null 2>&1 && echo '  i3         borders reloaded' \
+        || warn 'i3-msg reload failed'
+    fi
+
+    # polybar reads its colours once, so the bars have to come back. launch.sh
+    # is flock'd, so this is safe even if i3 did fire its exec_always.
+    if pgrep -x polybar >/dev/null 2>&1; then
+      setsid "$CFG/polybar/launch.sh" >/tmp/polybar-launch.log 2>&1 &
+      disown
+      echo '  polybar    restarting'
+    fi
+
+    if command -v dunstctl >/dev/null 2>&1 && dunstctl is-paused >/dev/null 2>&1; then
+      dunstctl reload >/dev/null 2>&1 && echo '  dunst      reloaded' \
+        || warn 'dunstctl reload failed'
+    fi
+
+    if command -v kitty >/dev/null 2>&1; then
+      kitty @ --to "${KITTY_LISTEN_ON:-unix:/tmp/kitty}" load-config >/dev/null 2>&1 || true
+    fi
+  fi
+
+  printf '  ghostty    reload with ctrl+shift+, (or open a new window)\n'
+  printf '  kitty      reload with ctrl+shift+f5\n'
+  printf '  btop       restart it\n'
+  printf '  starship   next prompt, or: exec bash\n'
+  printf '  rofi       next launch\n'
+  [ -n "$claude_theme" ] && printf '  claude     %s — live, settings.json is watched\n' "$claude_theme"
   return 0
 }
 
-case "${1:-}" in
-  armor|panel|cockpit) apply "$1" ;;
+variant=""
+keep_wallpaper=no
+for arg in "$@"; do
+  case "$arg" in
+    armor|panel|cockpit) variant="$arg" ;;
+    -k|--keep-wallpaper) keep_wallpaper=yes ;;
+    status)              variant="status" ;;
+    -h|--help|help)
+      sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+      exit 0
+      ;;
+    *) die "unknown argument '$arg' — expected armor, panel, cockpit or -k" ;;
+  esac
+done
+
+case "$variant" in
+  armor|panel|cockpit) apply "$variant" "$keep_wallpaper" ;;
   ""|status)
     printf 'Variant: %s\n' "$(current)"
     printf 'Switch:  gundam-theme armor | panel | cockpit\n'
     ;;
-  -h|--help|help)
-    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
-    ;;
-  *) die "unknown variant '$1' — expected armor, panel or cockpit" ;;
 esac

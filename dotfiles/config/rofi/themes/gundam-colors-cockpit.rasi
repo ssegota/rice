@@ -1,0 +1,33 @@
+/* rofi colours — variant C: COCKPIT
+ * The same roles inverted onto the cockpit ground. Ground and ink come from
+ * ghostty/themes/gundam-cockpit.conf; the accents are the Federation hues
+ * lifted until they clear 4.5:1 on it.
+ *
+ * The slab splits from the text blue: white on the lifted #5b83d6 is only
+ * 3.7:1, so the slab takes blue-deep #2b3a5e — the cockpit terminal's own
+ * selection colour — and #5b83d6 stays the blue you read.
+ */
+* {
+    armor:          #12141aff;
+    armor-hi:       #1b1f28ff;
+    armor-lo:       #0c0e13ff;
+    line:           #2f3646ff;
+    ink:            #e8eaf2ff;
+    ink-dim:        #8b93a7ff;
+    blue:           #5b83d6ff;
+    blue-deep:      #2b3a5eff;
+    red:            #e63946ff;
+    yellow:         #f6c14eff;
+    eye:            #7fc76cff;
+
+    slab:           #2b3a5eff;
+    on-slab:        #e8eaf2ff;
+    on-slab-dim:    #e8eaf2b0;
+    on-slab-active: #f6c14eff;
+    on-red:         #12141aff;
+}
+
+/* Match highlighting: rofi will not accept a token here, only a literal. */
+element-text {
+    highlight: bold #e63946ff;
+}

@@ -1,5 +1,10 @@
 # ~/.config/dunst/dunstrc — Gundam RX-78-2 "Federation Armor" (dunst 1.12+ syntax)
 #
+# Shape only. The colours (and the icon set, which follows light/dark) live in
+# themes/gundam-<variant>.conf and reach dunst as the drop-in
+# dunstrc.d/50-gundam-active.conf, which gundam-theme repoints. Drop-ins
+# outrank this file, so setting a colour here would do nothing.
+#
 # A notification is one of the dashboard's .svc rows lifted off the page: an
 # armour-white card, a grey seam around it, and a 4px colour-coded rule down
 # the left edge saying how much you should care. Corners are square, because
@@ -36,8 +41,7 @@
     icon_position = left
     max_icon_size = 48
     enable_recursive_icon_lookup = true
-    # Light cards want the light icon set.
-    icon_theme = Papirus, Papirus-Light, Adwaita
+    # icon_theme: set per variant in themes/gundam-<variant>.conf
 
     progress_bar = true
     progress_bar_height = 8
@@ -56,27 +60,12 @@
     mouse_middle_click = context
     mouse_right_click = close_all
 
-# Low: a quiet panel. Grey seam, secondary ink — the page's .dev row.
+# How long each level stays up. Colours: themes/gundam-<variant>.conf.
 [urgency_low]
-    background = "#f8f9f6"
-    foreground = "#545a66"
-    frame_color = "#b0b3ac"
-    highlight = "#24408e"
     timeout = 5
 
-# Normal: Federation blue rule, full-strength ink — the page's .svc row.
 [urgency_normal]
-    background = "#f8f9f6"
-    foreground = "#15181f"
-    frame_color = "#24408e"
-    highlight = "#24408e"
     timeout = 8
 
-# Critical: chest red, and the card itself goes red-on-white so it cannot be
-# mistaken for an ordinary notification at a glance.
 [urgency_critical]
-    background = "#ffffff"
-    foreground = "#15181f"
-    frame_color = "#c0272d"
-    highlight = "#c0272d"
     timeout = 0

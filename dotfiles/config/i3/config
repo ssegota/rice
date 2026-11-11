@@ -158,6 +158,13 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+# Pin workspaces to outputs by physical position (laptop, middle, right) so the
+# numbering follows the layout instead of whatever order i3 first saw the plugs.
+# The trailing output is the fallback for when the dock is unplugged.
+workspace $ws1 output eDP-1
+workspace $ws2 output DP-1-3 DP-1 eDP-1
+workspace $ws3 output DP-1-1 DP-1 eDP-1
+
 # pressing the current workspace's number again jumps back to the previous one
 workspace_auto_back_and_forth yes
 
@@ -266,17 +273,11 @@ exec --no-startup-id gsettings set org.gnome.desktop.interface color-scheme 'pre
 exec --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 
 # Window colors — Gundam RX-78-2 "Federation Armor"
-# Borders are the panel seams between armour plates: Federation blue marks the
-# plate you are working on, chest red the one shouting at you, and everything
-# else recedes to the dashboard's --line / --armor-lo greys.
+# The client.* block lives in themes/gundam-<variant>.conf; gundam-theme
+# repoints the symlink and runs `i3-msg reload`, which re-reads includes
+# without firing exec_always.
 # Full palette + rationale: ~/.config/gundam/palette.md
-#
-# Class                  Border   Background Text     Indicator Child Border
-client.focused           #24408e  #e6e7e2   #15181f  #f0b929   #24408e
-client.focused_inactive  #b0b3ac  #e6e7e2   #545a66  #b0b3ac   #b0b3ac
-client.unfocused         #d2d4ce  #e6e7e2   #545a66  #d2d4ce   #d2d4ce
-client.urgent            #c0272d  #e6e7e2   #15181f  #c0272d   #c0272d
-client.background        #e6e7e2
+include ~/.config/i3/themes/gundam-active.conf
 
 exec --no-startup-id ~/.config/i3/scripts/battery-alert.sh
 

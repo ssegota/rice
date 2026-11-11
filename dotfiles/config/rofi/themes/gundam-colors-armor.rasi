@@ -1,0 +1,29 @@
+/* rofi colours — variant A: ARMOR
+ * The dashboard's own values, unaltered.
+ * Selected by gundam-theme via the gundam-colors-active.rasi symlink.
+ */
+* {
+    armor:          #e6e7e2ff;
+    armor-hi:       #f8f9f6ff;
+    armor-lo:       #d2d4ceff;
+    line:           #b0b3acff;
+    ink:            #15181fff;
+    ink-dim:        #545a66ff;
+    blue:           #24408eff;
+    blue-deep:      #1a2f6bff;
+    red:            #c0272dff;
+    yellow:         #f0b929ff;
+    eye:            #3f9e56ff;
+
+    /* The blue gate-head slab and what sits on it. */
+    slab:           #24408eff;
+    on-slab:        #ffffffff;
+    on-slab-dim:    #ffffffb0;
+    on-slab-active: #f0b929ff;
+    on-red:         #ffffffff;
+}
+
+/* Match highlighting: rofi will not accept a token here, only a literal. */
+element-text {
+    highlight: bold #c0272dff;
+}
