@@ -14,6 +14,8 @@ rows=(
   "armor    light — the dashboard's own colours"
   "panel    light — greyer ground, less glare"
   "cockpit  dark — for night work"
+  "tokyonight  dark — the old Tokyo Night"
+  "thinkpad  dark — P14s black, TrackPoint red"
 )
 
 # The notification lands after the switch, so it is drawn in the new colours —

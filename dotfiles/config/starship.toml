@@ -237,8 +237,8 @@ orange = "#f08c4a"
 yellow = "#f6c14e"
 teal = "#3bb8c4"
 
-# ── Tokyo Night palette (kept for easy switching) ────────────────────────────
-[palettes.tokyo_night]
+# ── Variant TOKYONIGHT — the pre-Gundam theme ────────────────────────────────
+[palettes.gundam_tokyonight]
 fg = "#c0caf5"
 ink = "#16161e"
 chip = "#16161e"
@@ -255,3 +255,23 @@ red = "#f7768e"
 orange = "#ff9e64"
 yellow = "#e0af68"
 teal = "#2ac3de"
+
+# ── Variant THINKPAD — P14s Gen 5: black chassis, one red ────────────────────
+# The frame and OS bubble wear the TrackPoint; blue is IBM blue, iris silver.
+[palettes.gundam_thinkpad]
+fg = "#e8e8e8"
+ink = "#0a0a0a"
+chip = "#0a0a0a"
+frame = "#e2231a"
+bg = "#141414"
+surface = "#333333"
+overlay = "#8a8a8a"
+blue = "#5f9bd8"
+cyan = "#5fb8c2"
+green = "#4cc76a"
+magenta = "#c27ba0"
+iris = "#b4b4b4"
+red = "#f54a40"
+orange = "#f2a33a"
+yellow = "#f2a33a"
+teal = "#5fb8c2"

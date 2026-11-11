@@ -219,6 +219,8 @@ gundam-theme armor      # light, ground #e6e7e2 — the dashboard's own colours
 gundam-theme panel      # light, ground #d2d4ce — same hues, greyer, less glare
 gundam-theme cockpit    # dark, ground #12141a — for night work
 gundam-theme cockpit -k # ... but leave the wallpaper alone
+gundam-theme tokyonight # dark, ground #1a1b26 — the old Tokyo Night
+gundam-theme thinkpad   # dark, ground #141414 — P14s black + TrackPoint red
 ```
 
 | Variant | Ground | Opacity | For |
@@ -226,6 +228,21 @@ gundam-theme cockpit -k # ... but leave the wallpaper alone
 | `armor` | `#e6e7e2` | 0.97 | daylight; matches the dashboard exactly |
 | `panel` | `#d2d4ce` | **0.90** | dim rooms — recessed grey, and the most see-through |
 | `cockpit` | `#12141a` | 0.95 | night work |
+| 🆕 `tokyonight` | `#1a1b26` | 0.95 | the pre-Gundam Tokyo Night, restored from git (`6050d29`) |
+| 🆕 `thinkpad` | `#141414` | 0.95 | the P14s Gen 5 itself — see below |
+
+**`thinkpad`** follows the laptop: Villi-black ground, white-backlight ink,
+and one colour, the TrackPoint. The role names stay shared, so `blue` is
+the silver "ThinkPad" lettering `#b4b4b4`, the focused-workspace/selection
+slab is deep TrackPoint `#b5160f`, and text red is lifted to `#f54a40` (true
+`#e2231a` is 3.9:1, so it is kept for the i3 focus border, the cursor and
+the prompt frame). Amber charge LED = warnings and i3 urgent; green Caps-Lock
+LED = OK. Wallpapers: `thinkpad-3`, `thinkpad-2`, `thinkpad`.
+
+Variants aren't hardcoded any more: `gundam-theme` accepts any name with a
+full set of `themes/gundam-<name>.*` files plus `[palettes.gundam_<name>]`
+in `starship.toml`, and lists what it finds. (The command keeps its Gundam
+name for muscle memory.)
 
 The ANSI palette is byte-identical across `armor` and `panel` — every colour
 was picked to stay legible on both grounds, so switching changes only the

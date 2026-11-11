@@ -1,0 +1,27 @@
+/* rofi colours — variant: TOKYONIGHT
+ * The pre-Gundam theme on the shared roles. Slab is Tokyo Night's blue0.
+ */
+* {
+    armor:          #1a1b26ff;
+    armor-hi:       #24283bff;
+    armor-lo:       #16161eff;
+    line:           #414868ff;
+    ink:            #c0caf5ff;
+    ink-dim:        #868eb8ff;
+    blue:           #7aa2f7ff;
+    blue-deep:      #283457ff;
+    red:            #f7768eff;
+    yellow:         #e0af68ff;
+    eye:            #9ece6aff;
+
+    slab:           #3d59a1ff;
+    on-slab:        #ffffffff;
+    on-slab-dim:    #ffffffb0;
+    on-slab-active: #e0af68ff;
+    on-red:         #1a1b26ff;
+}
+
+/* Match highlighting: rofi will not accept a token here, only a literal. */
+element-text {
+    highlight: bold #bb9af7ff;
+}

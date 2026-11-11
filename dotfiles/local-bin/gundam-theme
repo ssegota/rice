@@ -4,7 +4,12 @@
 #   gundam-theme armor     light, ground #e6e7e2 — the dashboard's own colours
 #   gundam-theme panel     light, ground #d2d4ce — same hues, greyer, less glare
 #   gundam-theme cockpit   dark, ground #12141a — for night work
+#   gundam-theme tokyonight  dark, ground #1a1b26 — the pre-Gundam Tokyo Night
+#   gundam-theme thinkpad  dark, ground #141414 — P14s black + TrackPoint red
 #   gundam-theme           print which variant is active
+#
+# Any variant whose files exist is accepted, so a new one is just a new set of
+# themes/gundam-<name>.* files plus a [palettes.gundam_<name>] in starship.toml.
 #
 # Options:
 #   -k, --keep-wallpaper   switch everything except the wallpaper
@@ -133,8 +138,8 @@ apply() {
   # would rather it borrowed the terminal's sixteen colours.
   local claude_theme=""
   case "$v" in
-    cockpit) claude_theme=dark ;;
-    *)       claude_theme=light ;;
+    armor|panel) claude_theme=light ;;
+    *)           claude_theme=dark ;;
   esac
   if [ -f "$CLAUDE_SETTINGS" ] && grep -q '^[[:space:]]*"theme"[[:space:]]*:' "$CLAUDE_SETTINGS"; then
     sed -i "s|^\([[:space:]]*\)\"theme\"[[:space:]]*:[[:space:]]*\"[^\"]*\"|\1\"theme\": \"$claude_theme\"|" \
@@ -204,25 +209,38 @@ apply() {
   return 0
 }
 
+# Every variant that has a ghostty theme file; require() checks the rest.
+variants() {
+  local f
+  for f in "$GHOSTTY_DIR"/gundam-*.conf; do
+    f=${f##*/}; f=${f#gundam-}; f=${f%.conf}
+    [ "$f" = active ] || printf '%s\n' "$f"
+  done
+}
+
 variant=""
 keep_wallpaper=no
 for arg in "$@"; do
   case "$arg" in
-    armor|panel|cockpit) variant="$arg" ;;
     -k|--keep-wallpaper) keep_wallpaper=yes ;;
     status)              variant="status" ;;
     -h|--help|help)
-      sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
-    *) die "unknown argument '$arg' — expected armor, panel, cockpit or -k" ;;
+    -*) die "unknown option '$arg'" ;;
+    *)
+      variants | grep -qxF -- "$arg" \
+        || die "unknown variant '$arg' — have: $(variants | paste -sd' ')"
+      variant="$arg"
+      ;;
   esac
 done
 
 case "$variant" in
-  armor|panel|cockpit) apply "$variant" "$keep_wallpaper" ;;
   ""|status)
     printf 'Variant: %s\n' "$(current)"
-    printf 'Switch:  gundam-theme armor | panel | cockpit\n'
+    printf 'Switch:  gundam-theme %s\n' "$(variants | paste -sd'|' | sed 's/|/ | /g')"
     ;;
+  *) apply "$variant" "$keep_wallpaper" ;;
 esac

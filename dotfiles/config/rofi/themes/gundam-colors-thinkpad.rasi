@@ -1,0 +1,29 @@
+/* rofi colours — variant: THINKPAD (P14s Gen 5)
+ * Black chassis, silver lettering, and the TrackPoint as the only colour:
+ * the selected row is a deep-red slab, the accent is TrackPoint red.
+ * "blue" is silver here — the role name is kept so gundam-body.rasi is shared.
+ */
+* {
+    armor:          #141414ff;
+    armor-hi:       #1f1f1fff;
+    armor-lo:       #0a0a0aff;
+    line:           #333333ff;
+    ink:            #e8e8e8ff;
+    ink-dim:        #8a8a8aff;
+    blue:           #b4b4b4ff;
+    blue-deep:      #2a2a2aff;
+    red:            #f54a40ff;
+    yellow:         #f2a33aff;
+    eye:            #4cc76aff;
+
+    slab:           #b5160fff;
+    on-slab:        #ffffffff;
+    on-slab-dim:    #ffffffb0;
+    on-slab-active: #ffd0ccff;
+    on-red:         #0a0a0aff;
+}
+
+/* Match highlighting: rofi will not accept a token here, only a literal. */
+element-text {
+    highlight: bold #f54a40ff;
+}
