@@ -52,7 +52,7 @@ It's staged and re-runnable. Anything it replaces in `$HOME` is copied to
 | `--sources` | adds third-party apt repos (Chrome, Warp, Tailscale, NodeSource, Waydroid, 2 PPAs) |
 | `--packages` | ~120 apt packages from `packages/apt-rice.txt` |
 | `--snaps` | snaps from `packages/snap-rice.txt` |
-| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, greenclip, herdr + agent integrations |
+| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, greenclip, herdr + agent integrations, herdr-core |
 | `--dotfiles` | configs into `$HOME`, with backups |
 | `--wallpapers` | images into `~/Pictures/wallpapers` |
 | `--fonts` | downloads JetBrainsMono Nerd Font |
@@ -188,6 +188,15 @@ sidebar. It's the Linux stand-in for cmux (macOS-only).
   browser approval (the link is printed on *this* machine, not the remote)
   and expires — set the `ssh` rule to `"action": "accept"` for your own
   devices (`autogroup:self`) or Herdr stalls on reconnect.
+- **Phone (Herdr app, Android/iOS)** — the app doesn't talk to the TUI; it
+  needs **herdr-core** (`hc`) on each machine, which `--external` installs.
+  Over SSH it runs `sh -c '… $HOME/.local/bin/herdr-core connect'` and the
+  core server starts itself on first connect (survives logout when the user
+  has linger on). In the app add each machine with its Tailscale IP, port
+  22, and the login user. Agents started in `herdr` (TUI) **don't** appear in
+  the app; start them with `hc run --bg claude` or from the app.
+- **PATH for non-interactive SSH** — `.bashrc` puts `~/.local/bin` on PATH
+  *before* the interactive guard, so `ssh box herdr …` / the app find it.
 
 ## Theme — Gundam RX-78-2 "Federation Armor"
 

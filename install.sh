@@ -230,6 +230,16 @@ stage_external() {
     ok "installing herdr → ~/.local/bin"
     run bash -c 'curl -fsSL https://herdr.dev/install.sh | sh'
   fi
+  # herdr-core (hc) — what the Herdr phone app talks to over SSH. Separate
+  # from the TUI: agents started in `herdr` don't show in the app, ones
+  # started with `hc run …` or from the app do. Official installer: user-local
+  # ~/.local/bin/herdr-core (+ hc symlink), SHA-256 verified, no root.
+  if [ -x "$HOME/.local/bin/herdr-core" ]; then skip "herdr-core $("$HOME/.local/bin/herdr-core" --version 2>/dev/null | awk '{print $2}')"
+  else
+    ok "installing herdr-core → ~/.local/bin"
+    run bash -c 'curl -fsSL https://releases.herdr.dev/core/install.sh | sh'
+  fi
+
   # State-reporting hooks, only for agent CLIs that are already set up
   # (each integration needs that CLI's config dir to exist).
   local agent cfg
@@ -416,7 +426,7 @@ Stages (default = all, in this order):
   --packages    apt packages from packages/apt-rice.txt
   --snaps       snaps from packages/snap-rice.txt
   --external    starship, uv, flyctl, libinput-gestures, vim-plug, fd symlink,
-                greenclip, herdr (+ agent integrations)
+                greenclip, herdr (+ agent integrations), herdr-core
   --dotfiles    configs into $HOME (backs up whatever it replaces)
   --wallpapers  images into ~/Pictures/wallpapers
   --fonts       JetBrainsMono Nerd Font
