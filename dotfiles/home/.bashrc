@@ -1,4 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac  # non-interactive SSH (Herdr app, herdr --remote) needs ~/.local/bin
 alias agent='cursor-agent'
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
