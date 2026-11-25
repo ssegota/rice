@@ -223,6 +223,26 @@ stage_external() {
     run chmod +x "$HOME/.local/bin/greenclip"
   fi
 
+  # herdr — agent multiplexer (tmux-like, knows which AI agent is working /
+  # blocked / done). Official installer: user-local, SHA-256 verified, no root.
+  if [ -x "$HOME/.local/bin/herdr" ]; then skip "herdr $("$HOME/.local/bin/herdr" --version 2>/dev/null | awk '{print $2}')"
+  else
+    ok "installing herdr → ~/.local/bin"
+    run bash -c 'curl -fsSL https://herdr.dev/install.sh | sh'
+  fi
+  # State-reporting hooks, only for agent CLIs that are already set up
+  # (each integration needs that CLI's config dir to exist).
+  local agent cfg
+  for agent in claude:.claude codex:.codex antigravity-cli:.gemini/config; do
+    cfg="$HOME/${agent#*:}"
+    if [ -d "$cfg" ]; then
+      run "$HOME/.local/bin/herdr" integration install "${agent%%:*}" \
+        && ok "herdr integration: ${agent%%:*}"
+    else
+      skip "herdr integration: ${agent%%:*} (no ~/${agent#*:} yet — log in to it, re-run --external)"
+    fi
+  done
+
   # autorandr profiles are per-machine: save one at each monitor setup with
   # `autorandr --save <name>` (the apt package provides hotplug udev rules).
   have autorandr && skip "autorandr present — remember to --save a profile per dock"
@@ -243,6 +263,12 @@ stage_dotfiles() {
   for f in "$d"/config/*; do
     [ -e "$f" ] || continue
     place "$f" ".config/$(basename "$f")"
+  done
+
+  # rofi's drun lists these (Herdr launcher, …)
+  for f in "$d"/applications/*.desktop; do
+    [ -e "$f" ] || continue
+    place "$f" ".local/share/applications/$(basename "$f")"
   done
 
   for f in "$d"/local-bin/*; do
@@ -390,7 +416,7 @@ Stages (default = all, in this order):
   --packages    apt packages from packages/apt-rice.txt
   --snaps       snaps from packages/snap-rice.txt
   --external    starship, uv, flyctl, libinput-gestures, vim-plug, fd symlink,
-                greenclip
+                greenclip, herdr (+ agent integrations)
   --dotfiles    configs into $HOME (backs up whatever it replaces)
   --wallpapers  images into ~/Pictures/wallpapers
   --fonts       JetBrainsMono Nerd Font

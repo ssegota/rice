@@ -52,7 +52,7 @@ It's staged and re-runnable. Anything it replaces in `$HOME` is copied to
 | `--sources` | adds third-party apt repos (Chrome, Warp, Tailscale, NodeSource, Waydroid, 2 PPAs) |
 | `--packages` | ~120 apt packages from `packages/apt-rice.txt` |
 | `--snaps` | snaps from `packages/snap-rice.txt` |
-| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, greenclip |
+| `--external` | starship, uv, flyctl, libinput-gestures, vim-plug, `fd` symlink, greenclip, herdr + agent integrations |
 | `--dotfiles` | configs into `$HOME`, with backups |
 | `--wallpapers` | images into `~/Pictures/wallpapers` |
 | `--fonts` | downloads JetBrainsMono Nerd Font |
@@ -145,6 +145,49 @@ split moved to `Super+b` ("beside") to free up the `h`.
 - `shopt` — `autocd`, `cdspell`, `dirspell`, `globstar`
 - `cp`/`mv`/`mkdir` aliased to interactive+verbose
 - `EDITOR=code`, conda init block, `~/.local/bin` and `~/.fly/bin` on `PATH`
+
+## Herdr — agent multiplexer
+
+[Herdr](https://herdr.dev) is a tmux-like multiplexer that knows what the AI
+agent in each pane is doing (working / blocked / done) and shows it in a
+sidebar. It's the Linux stand-in for cmux (macOS-only).
+
+- **Install** — `./install.sh --external` runs the official installer
+  (user-local `~/.local/bin/herdr`, SHA-256 verified, no root).
+- **Agent integrations** — the same stage runs `herdr integration install`
+  for `claude`, `codex` and `antigravity-cli`, but only for CLIs whose config
+  dir already exists (`~/.claude`, `~/.codex`, `~/.gemini/config`). After a
+  fresh install: log in to each CLI once, then re-run `--external`.
+  Check with `herdr integration status`; reinstall after a Herdr upgrade.
+- **Launcher** — `dotfiles/applications/herdr.desktop` → `Super+d`, type
+  `herdr` (opens it in Ghostty).
+- **Remote machine over Tailscale** — Herdr attaches to a Herdr server on
+  another box over plain SSH and shows it in the same sidebar as *Local*
+  (`prefix+w` to switch). Not captured here because it's machine-specific;
+  to recreate:
+
+  ```sshconfig
+  # ~/.ssh/config — ControlMaster lets one Tailscale SSH approval cover
+  # every connection Herdr opens for the next 4 h
+  Host <alias>
+      HostName <tailscale-hostname>
+      User <remote-user>
+      ControlMaster auto
+      ControlPath ~/.ssh/cm/%r@%h
+      ControlPersist 4h
+  ```
+
+  ```bash
+  mkdir -p ~/.ssh/cm
+  scp ~/.local/bin/herdr <alias>:.local/bin/herdr     # same arch → same binary
+  ssh <alias> '~/.local/bin/herdr integration install claude'
+  herdr machine add <alias> --label <alias>
+  ```
+
+  Tailscale SSH with `"action": "check"` in the tailnet policy asks for a
+  browser approval (the link is printed on *this* machine, not the remote)
+  and expires — set the `ssh` rule to `"action": "accept"` for your own
+  devices (`autogroup:self`) or Herdr stalls on reconnect.
 
 ## Theme — Gundam RX-78-2 "Federation Armor"
 
@@ -342,7 +385,7 @@ machine.
   from your own `environment.yml` files.
 - **App data** for Obsidian vaults, OBS scenes, VirtualBox VMs, Steam/Lutris
   games, Thunderbird/Evolution profiles. Big, and mostly not "config".
-- **AI CLI logins** (claude, cursor-agent, codex, copilot) — re-auth each.
+- **AI CLI logins** (claude, cursor-agent, codex, copilot, agy/Antigravity) — re-auth each.
 - **Credentials** — deliberately, see below.
 - **`texlive-full`** package selections beyond the metapackage.
 

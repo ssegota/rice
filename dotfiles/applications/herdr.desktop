@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Herdr
+GenericName=Agent multiplexer
+Comment=Open Herdr (Claude Code / Codex / Antigravity agents) in a terminal
+Exec=ghostty --title="Herdr" --working-directory=home -e bash -lc "/home/sbs/.local/bin/herdr; exec bash"
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;
+Keywords=herdr;agents;tmux;multiplexer;claude;codex;
